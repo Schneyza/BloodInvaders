@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "BloodInvadersPlayer.h"
 #include "BloodInvadersGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -13,6 +14,13 @@ class ABloodInvadersGameMode : public AGameModeBase
 
 public:
 	ABloodInvadersGameMode();
+
+	virtual void BeginPlay() override;
+
+protected:
+	/* The player blueprint*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+		TSubclassOf<class ABloodInvadersPlayer> PlayerBP;
 };
 
 
