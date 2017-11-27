@@ -38,16 +38,16 @@ float UFluidDynamics::getFluidPotential(FVector vec)
 	float x = vec.X;
 	float y = vec.Y;
 	float base = globalScale;
-	return 1 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base, y * base);
-		//+ 0.5 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base * 2 + 1, y * base * 2)
-		//+ 0.25 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base * 4 - 1, y * base * 4)
-		//+ 0.125 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base * 8, y * base * 8);
+	return 1 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base, y * base)
+		+ 0.5 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base * 2 + 1, y * base * 2)
+		+ 0.25 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base * 4 - 1, y * base * 4)
+		+ 0;
 }
 
 
 FVector UFluidDynamics::getFluidVelocity2D(FVector location)
 {
-	float ds = 1e-4;
+	float ds = 1e-3;
 	float V = getFluidPotential(location);
 	float dVdx = (getFluidPotential(FVector(location.X + ds, location.Y, location.Z)) - V) / ds / globalScale;
 	float dVdy = (getFluidPotential(FVector(location.X, location.Y + ds, location.Z)) - V) / ds / globalScale;
