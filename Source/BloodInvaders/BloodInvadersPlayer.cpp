@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "SpaceShip.h"
-#include "SpaceShipProjectile.h"
+#include "BloodInvadersPlayer.h"
+#include "Projectile.h"
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
@@ -13,37 +13,33 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 
-const FName ASpaceShip::MoveForwardBinding("MoveForward");
-const FName ASpaceShip::MoveRightBinding("MoveRight");
-const FName ASpaceShip::FireBinding("Fire");
+const FName ABloodInvadersPlayer::MoveForwardBinding("MoveForward");
+const FName ABloodInvadersPlayer::MoveRightBinding("MoveRight");
+const FName ABloodInvadersPlayer::FireBinding("Fire");
 
 bool bFiring = false;
 
-ASpaceShip::ASpaceShip()
+ABloodInvadersPlayer::ABloodInvadersPlayer()
 {
 	// Create the mesh component
-	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
-	RootComponent = ShipMeshComponent;
-	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-
-	//// Cache our sound effect
-	//static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/SpaceShip/Audio/TwinStickFire.TwinStickFire"));
-	//FireSound = FireAudio.Object;
+	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
+	RootComponent = PlayerMeshComponent;
+	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when ship does
+	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when player does
 	CameraBoom->TargetArmLength = 1200.f;
 	CameraBoom->RelativeRotation = FRotator(-80.f, 0.f, 0.f);
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
-	// Create a camera...
+										  // Create a camera...
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
 
-	// Movement
+														// Movement
 	MoveSpeed = 1000.0f;
 	// Weapon
 	GunOffset = FVector(65.f, 0.f, 0.f);
@@ -51,18 +47,18 @@ ASpaceShip::ASpaceShip()
 	bCanFire = true;
 }
 
-void ASpaceShip::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
 
 	// set up gameplay key bindings
 	PlayerInputComponent->BindAxis(MoveForwardBinding);
 	PlayerInputComponent->BindAxis(MoveRightBinding);
-	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &ASpaceShip::EnableFiring);
-	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &ASpaceShip::DisableFiring);
+	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &ABloodInvadersPlayer::EnableFiring);
+	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring);
 }
 
-void ASpaceShip::Tick(float DeltaSeconds)
+void ABloodInvadersPlayer::Tick(float DeltaSeconds)
 {
 	// Find movement direction
 	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
@@ -94,7 +90,7 @@ void ASpaceShip::Tick(float DeltaSeconds)
 	FireShot();
 }
 
-void ASpaceShip::FireShot()
+void ABloodInvadersPlayer::FireShot()
 {
 	// If we it's ok to fire again
 	if (bCanFire == true)
@@ -111,12 +107,12 @@ void ASpaceShip::FireShot()
 				if (Projectile != NULL)
 				{
 					// spawn the projectile
-					World->SpawnActor<ASpaceShipProjectile>(Projectile, SpawnLocation, FireRotation);
+					World->SpawnActor<AProjectile>(Projectile, SpawnLocation, FireRotation);
 				}
 			}
 
 			bCanFire = false;
-			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ASpaceShip::ShotTimerExpired, FireRate);
+			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ABloodInvadersPlayer::ShotTimerExpired, FireRate);
 
 			// try and play the sound if specified
 			if (FireSound != nullptr)
@@ -131,15 +127,15 @@ void ASpaceShip::FireShot()
 	}
 }
 
-void ASpaceShip::EnableFiring() {
+void ABloodInvadersPlayer::EnableFiring() {
 	bFiring = true;
 }
 
-void ASpaceShip::DisableFiring() {
+void ABloodInvadersPlayer::DisableFiring() {
 	bFiring = false;
 }
 
-void ASpaceShip::ShotTimerExpired()
+void ABloodInvadersPlayer::ShotTimerExpired()
 {
 	bCanFire = true;
 }

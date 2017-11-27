@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "SpaceShip.generated.h"
+#include "BloodInvadersPlayer.generated.h"
 
 UCLASS()
-class BLOODINVADERS_API ASpaceShip : public APawn
+class BLOODINVADERS_API ABloodInvadersPlayer : public APawn
 {
 	GENERATED_BODY()
 
 	/* The mesh component */
 	UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ShipMeshComponent;
+	class UStaticMeshComponent* PlayerMeshComponent;
 
 	/** The camera */
 	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -25,23 +25,23 @@ class BLOODINVADERS_API ASpaceShip : public APawn
 
 public:
 	// Sets default values for this pawn's properties
-	ASpaceShip();
+	ABloodInvadersPlayer();
 
-	/** Offset from the ships location to spawn projectiles */
+	/** Offset from the player's location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 		FVector GunOffset;
 
 	/* How fast the weapon will fire */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-		float FireRate;
+	float FireRate;
 
-	/* The speed our ship moves around the level */
+	/* The speed our player's moves around the level */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-		float MoveSpeed;
+	float MoveSpeed;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
-		class USoundBase* FireSound;
+	class USoundBase* FireSound;
 
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
@@ -61,8 +61,8 @@ public:
 	static const FName MoveRightBinding;
 	static const FName FireBinding;
 
-	/** Returns ShipMeshComponent subobject **/
-	FORCEINLINE class UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
+	/** Returns PlayerMeshComponent subobject **/
+	FORCEINLINE class UStaticMeshComponent* GetPlayerMeshComponent() const { return PlayerMeshComponent; }
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 	/** Returns CameraBoom subobject **/
@@ -70,7 +70,7 @@ public:
 
 protected:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile)
-	TSubclassOf<class ASpaceShipProjectile> Projectile;
+	TSubclassOf<class AProjectile> Projectile;
 
 private:
 	/* Flag to control firing  */
@@ -79,6 +79,6 @@ private:
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
 
-	
+
 
 };

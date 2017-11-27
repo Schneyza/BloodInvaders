@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SpaceShipProjectile.generated.h"
+#include "Projectile.generated.h"
 
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 
-UCLASS(config=Game)
-class ASpaceShipProjectile : public AActor
+UCLASS()
+class BLOODINVADERS_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 
@@ -20,11 +20,11 @@ class ASpaceShipProjectile : public AActor
 
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
-	UProjectileMovementComponent* ProjectileMovement;
-	
-public:	
+		UProjectileMovementComponent* ProjectileMovement;
+
+public:
 	// Sets default values for this actor's properties
-	ASpaceShipProjectile();
+	AProjectile();
 
 	/** Function to handle the projectile hitting something */
 	UFUNCTION()
@@ -34,6 +34,6 @@ public:
 	FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
-	
-	
+
+
 };
