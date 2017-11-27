@@ -21,16 +21,14 @@ bool bFiring = false;
 
 ASpaceShip::ASpaceShip()
 {
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/SpaceShip/Meshes/TwinStickUFO.TwinStickUFO"));
 	// Create the mesh component
 	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
 	RootComponent = ShipMeshComponent;
 	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
 
-	// Cache our sound effect
-	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/SpaceShip/Audio/TwinStickFire.TwinStickFire"));
-	FireSound = FireAudio.Object;
+	//// Cache our sound effect
+	//static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/SpaceShip/Audio/TwinStickFire.TwinStickFire"));
+	//FireSound = FireAudio.Object;
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -110,8 +108,11 @@ void ASpaceShip::FireShot()
 			UWorld* const World = GetWorld();
 			if (World != NULL)
 			{
-				// spawn the projectile
-				World->SpawnActor<ASpaceShipProjectile>(SpawnLocation, FireRotation);
+				if (Projectile != NULL)
+				{
+					// spawn the projectile
+					World->SpawnActor<ASpaceShipProjectile>(Projectile, SpawnLocation, FireRotation);
+				}
 			}
 
 			bCanFire = false;
