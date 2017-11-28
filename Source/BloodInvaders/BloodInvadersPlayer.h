@@ -68,9 +68,22 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
+	//Accessor functions for the player's controller id
+	void SetControllerId(int NewControllerId);
+	FORCEINLINE int GetControllerId() const { return ControllerId; }
+
 protected:
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile)
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> Projectile;
+
+	/* The player's controller id*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Controller, meta = (AllowPrivateAccess = "true"))
+	int ControllerId;
+
+	/* Is the player currently firing?*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	bool bFiring;
+
 
 private:
 	/* Flag to control firing  */
@@ -78,7 +91,6 @@ private:
 
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
-
 
 
 };

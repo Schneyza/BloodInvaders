@@ -17,8 +17,6 @@ const FName ABloodInvadersPlayer::MoveForwardBinding("MoveForward");
 const FName ABloodInvadersPlayer::MoveRightBinding("MoveRight");
 const FName ABloodInvadersPlayer::FireBinding("Fire");
 
-bool bFiring = false;
-
 ABloodInvadersPlayer::ABloodInvadersPlayer()
 {
 	// Create the mesh component
@@ -45,6 +43,7 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	GunOffset = FVector(65.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
+	bFiring = false;
 }
 
 void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -73,16 +72,16 @@ void ABloodInvadersPlayer::Tick(float DeltaSeconds)
 	// If non-zero size, move this actor
 	if (Movement.SizeSquared() > 0.0f)
 	{
-		//const FRotator NewRotation = Movement.Rotation();
-		const FRotator NewRotation = FRotator(0.0f, 90.0f, 0.0f);
+		// Don't change the actors rotation
+		const FRotator Rotation = GetTransform().GetRotation().Rotator();
 		FHitResult Hit(1.f);
-		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
+		RootComponent->MoveComponent(Movement, Rotation, true, &Hit);
 
 		if (Hit.IsValidBlockingHit())
 		{
 			const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
 			const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
-			RootComponent->MoveComponent(Deflection, NewRotation, true);
+			RootComponent->MoveComponent(Deflection, Rotation, true);
 		}
 	}
 
@@ -129,10 +128,12 @@ void ABloodInvadersPlayer::FireShot()
 
 void ABloodInvadersPlayer::EnableFiring() {
 	bFiring = true;
+	//UE_LOG(LogClass, Log, TEXT("Player with ControllerId %i started firing"), ControllerId);
 }
 
 void ABloodInvadersPlayer::DisableFiring() {
 	bFiring = false;
+	//UE_LOG(LogClass, Log, TEXT("Player with ControllerId %i stopped firing"), ControllerId);
 }
 
 void ABloodInvadersPlayer::ShotTimerExpired()
@@ -140,3 +141,7 @@ void ABloodInvadersPlayer::ShotTimerExpired()
 	bCanFire = true;
 }
 
+void ABloodInvadersPlayer::SetControllerId(int NewControllerId)
+{
+	ControllerId = NewControllerId;
+}

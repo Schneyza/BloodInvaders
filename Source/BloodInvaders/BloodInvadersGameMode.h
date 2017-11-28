@@ -17,6 +17,9 @@ public:
 
 	virtual void BeginPlay() override;
 
+	/* Specifies the maximum number of players that will be spawned if there are enough PlayerStart objects in the map*/
+	static const int MaximumNumberOfPlayers;
+
 protected:
 	/* The player blueprint*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
