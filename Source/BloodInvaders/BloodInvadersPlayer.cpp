@@ -23,27 +23,17 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-
-	// Create a camera boom...
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->bAbsoluteRotation = true; // Don't want arm to rotate when player does
-	CameraBoom->TargetArmLength = 1200.f;
-	CameraBoom->RelativeRotation = FRotator(-80.f, 0.f, 0.f);
-	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
-
-										  // Create a camera...
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
-	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
-
-														// Movement
+	// Movement
 	MoveSpeed = 1000.0f;
 	// Weapon
 	GunOffset = FVector(65.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
 	bFiring = false;
+
+	//Map Boundaries
+	XBoundary = 660.0f;
+	YBoundary = 1180.0f;
 }
 
 void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -76,6 +66,24 @@ void ABloodInvadersPlayer::Tick(float DeltaSeconds)
 		const FRotator Rotation = GetTransform().GetRotation().Rotator();
 		FHitResult Hit(1.f);
 		RootComponent->MoveComponent(Movement, Rotation, true, &Hit);
+
+		// Enforce map boundaries
+		if (GetTransform().GetLocation().X > XBoundary) {
+			const FVector validPosition = FVector(XBoundary, GetTransform().GetLocation().Y, GetTransform().GetLocation().Z);
+			SetActorLocation(validPosition, false);
+		}
+		if (GetTransform().GetLocation().X < -XBoundary) {
+			const FVector validPosition = FVector(-XBoundary, GetTransform().GetLocation().Y, GetTransform().GetLocation().Z);
+			SetActorLocation(validPosition, false);
+		}
+		if (GetTransform().GetLocation().Y > YBoundary) {
+			const FVector validPosition = FVector(GetTransform().GetLocation().X, YBoundary, GetTransform().GetLocation().Z);
+			SetActorLocation(validPosition, false);
+		}
+		if (GetTransform().GetLocation().Y < -YBoundary) {
+			const FVector validPosition = FVector(GetTransform().GetLocation().X, -YBoundary, GetTransform().GetLocation().Z);
+			SetActorLocation(validPosition, false);
+		}
 
 		if (Hit.IsValidBlockingHit())
 		{

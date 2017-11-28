@@ -72,6 +72,12 @@ public:
 	void SetControllerId(int NewControllerId);
 	FORCEINLINE int GetControllerId() const { return ControllerId; }
 
+	/* Borders restricting the movement of the player to the screen boundaries*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Boundaries, meta = (AllowPrivateAccess = "true"))
+	float XBoundary;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Boundaries, meta = (AllowPrivateAccess = "true"))
+	float YBoundary;
+
 protected:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> Projectile;
