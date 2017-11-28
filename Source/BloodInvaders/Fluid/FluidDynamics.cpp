@@ -68,10 +68,10 @@ FVector UFluidDynamics::getFluidTorque2D(FVector location)
 	return FVector(0, 0, -2 * dVdxdy);
 }
 
-void UFluidDynamics::MoveWithFluid(UPrimitiveComponent* target)
+void UFluidDynamics::MoveWithFluid(UPrimitiveComponent* target, float factor)
 {
 	FVector fluidV = getFluidVelocity2D(target->GetComponentLocation());
-	target->SetPhysicsLinearVelocity(fluidV);
+	target->SetPhysicsLinearVelocity(fluidV * factor);
 }
 
 

@@ -52,7 +52,7 @@ public:
 	// Apply physics
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
-		static void MoveWithFluid(UPrimitiveComponent* target);
+		static void MoveWithFluid(UPrimitiveComponent* target, float factor);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void ApplyFluidForce(UPrimitiveComponent* target);
