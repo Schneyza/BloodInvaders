@@ -47,11 +47,25 @@ float UFluidDynamics::getFluidPotential(FVector vec)
 
 FVector UFluidDynamics::getFluidVelocity2D(FVector location)
 {
-	float ds = 1e-3;
+	float ds = 1e-4;
 	float V = getFluidPotential(location);
-	float dVdx = (getFluidPotential(FVector(location.X + ds, location.Y, location.Z)) - V) / ds / globalScale;
-	float dVdy = (getFluidPotential(FVector(location.X, location.Y + ds, location.Z)) - V) / ds / globalScale;
+	float dVdx = (getFluidPotential(FVector(location.X + ds / globalScale, location.Y, location.Z)) - V) / ds;
+	float dVdy = (getFluidPotential(FVector(location.X, location.Y + ds / globalScale, location.Z)) - V) / ds;
+	// divide by global scale to keep velocity invariant under scale transformation
 	return FVector(dVdy * globalTurbulenceAmplitude, -dVdx * globalTurbulenceAmplitude, 0) + linearVelocity;
+}
+
+
+FVector UFluidDynamics::getFluidTorque2D(FVector location)
+{
+	// Only z component = dy/dx - dy/dx = -2 dV/dxdy
+	float ds = 1e-4;
+	float V = getFluidPotential(location);
+	float Vx = getFluidPotential(FVector(location.X + ds / globalScale, location.Y, location.Z));
+	float Vy = getFluidPotential(FVector(location.X, location.Y + ds / globalScale, location.Z));
+	float Vxy = getFluidPotential(FVector(location.X + ds / globalScale, location.Y + ds / globalScale, location.Z));
+	float dVdxdy = (Vxy - Vx - Vy + V) / (ds * ds);
+	return FVector(0, 0, -2 * dVdxdy);
 }
 
 void UFluidDynamics::MoveWithFluid(UPrimitiveComponent* target)
@@ -69,4 +83,21 @@ void UFluidDynamics::ApplyFluidForce(UPrimitiveComponent* target)
 	float mass = target->GetMass();
 	FVector force = dV * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
 	target->AddForce(force);
+}
+
+
+void UFluidDynamics::ApplyFluidTorque(UPrimitiveComponent* target)
+{
+	FVector fluidT = getFluidTorque2D(target->GetComponentLocation());
+	FVector objectT = target->GetPhysicsAngularVelocity();
+	FVector dT = fluidT - objectT;
+	float mass = target->GetMass();
+	FVector torque = dT * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
+	target->AddTorque(torque);
+}
+
+void UFluidDynamics::ApplyFluid(UPrimitiveComponent* target)
+{
+	ApplyFluidForce(target);
+	ApplyFluidTorque(target);
 }

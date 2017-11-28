@@ -22,6 +22,7 @@ private:
 
 public:
 
+	// Settings
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void setTurbulenceScale(float scale);
@@ -36,15 +37,29 @@ public:
 		static void setInteractionStrength(float factor);
 
 
-	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
-		static float getFluidPotential(FVector vec);
+	// Calculate field values
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
-		static FVector getFluidVelocity2D(FVector vec);
+		static float getFluidPotential(FVector location);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static FVector getFluidVelocity2D(FVector location);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static FVector getFluidTorque2D(FVector location);
+
+
+	// Apply physics
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void MoveWithFluid(UPrimitiveComponent* target);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void ApplyFluidForce(UPrimitiveComponent* target);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void ApplyFluidTorque(UPrimitiveComponent* target);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void ApplyFluid(UPrimitiveComponent* target);
 };
