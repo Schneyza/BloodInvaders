@@ -23,6 +23,12 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+
+	if (PlayerMeshComponent->GetStaticMesh() == nullptr)
+	{
+		UE_LOG(LogClass, Error, TEXT("The StaticMesh Property of PlayerMeshComponent in BloodInvadersPlayer.cpp is null. Please make sure to assign the StaticMesh of PlayerMeshComponent in the Player Blueprint"));
+	}
+
 	// Movement
 	MoveSpeed = 1000.0f;
 	// Weapon
@@ -116,6 +122,9 @@ void ABloodInvadersPlayer::FireShot()
 					// spawn the projectile
 					World->SpawnActor<AProjectile>(Projectile, SpawnLocation, FireRotation);
 				}
+				else {
+					UE_LOG(LogClass, Error, TEXT("Projectile in BloodInvadersPlayer.cpp is null. Please make sure to assign the Projectile in the Player Blueprint"));
+				}
 			}
 
 			bCanFire = false;
@@ -125,6 +134,9 @@ void ABloodInvadersPlayer::FireShot()
 			if (FireSound != nullptr)
 			{
 				UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+			}
+			else {
+				UE_LOG(LogClass, Error, TEXT("FireSound in BloodInvadersPlayer.cpp is null. Please make sure to assign the FireSound in the Player Blueprint"));
 			}
 
 			bCanFire = false;

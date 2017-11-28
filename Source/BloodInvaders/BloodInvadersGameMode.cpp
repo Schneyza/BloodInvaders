@@ -26,16 +26,16 @@ void ABloodInvadersGameMode::BeginPlay()
 
 void ABloodInvadersGameMode::SpawnPlayers()
 {
-	UE_LOG(LogClass, Log, TEXT("Calles SpawnPlayers"));
+	//UE_LOG(LogClass, Log, TEXT("Calles SpawnPlayers"));
 	UWorld* const World = GetWorld();
 	if (World)
 	{
-		UE_LOG(LogClass, Log, TEXT("World not null"));
+		//UE_LOG(LogClass, Log, TEXT("World not null"));
 		//Spawn the players and set their controllers
 		TArray<AActor*> FoundActors;
 		if (PlayerBP != NULL)
 		{
-			UE_LOG(LogClass, Log, TEXT("PlayerBP not null"));
+			//UE_LOG(LogClass, Log, TEXT("PlayerBP not null"));
 			// Get all playerstarts in the world
 			UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), FoundActors);
 			//Determine how many players to spawn
@@ -44,14 +44,14 @@ void ABloodInvadersGameMode::SpawnPlayers()
 			{
 				// Create the player (not the actor); skip first player since he has a player be default
 				if (i != 0) {
-					UE_LOG(LogClass, Log, TEXT("Create Player"));
+					//UE_LOG(LogClass, Log, TEXT("Create Player"));
 					UGameplayStatics::CreatePlayer(World, i, true);
 				}
 
 				// Check whether player has a playercontroller
 				APlayerController* controller = UGameplayStatics::GetPlayerController(World, i);
 				if (controller != nullptr) {
-					UE_LOG(LogClass, Log, TEXT("Spawn pawn and assign PlayerController"));
+					//UE_LOG(LogClass, Log, TEXT("Spawn pawn and assign PlayerController"));
 
 					//Set Player Spawn params
 					FActorSpawnParameters SpawnParams;
@@ -74,6 +74,9 @@ void ABloodInvadersGameMode::SpawnPlayers()
 				}
 			}
 
+		}
+		else {
+			UE_LOG(LogClass, Error, TEXT("PlayerBP in BloodInvadersGameMode.cpp is null! Make sure to assign PlayerBP in the GameMode Blueprint!"));
 		}
 
 	}
