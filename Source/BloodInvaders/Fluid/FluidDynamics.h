@@ -15,11 +15,16 @@ class BLOODINVADERS_API UFluidDynamics : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 private:
+	static FVector coordinateOffset;
 	static FVector linearVelocity;
 	static float globalScale;
 	static float globalTurbulenceAmplitude;
 	static float fluidInteractionStrength;
-
+	// Domain
+	static int domainMode;
+	static float domainFalloffDistance;
+	static FVector domainBot;
+	static FVector domainTop;
 public:
 
 	// Settings
@@ -31,10 +36,19 @@ public:
 		static void setLinearVelocity(FVector linearVelocity);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void setCoordinateOffset(FVector linearVelocity);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void setTurbulenceAmplitude(float amplitude);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void setInteractionStrength(float factor);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void setBoxDomain(FVector center, FVector extents, float falloffDistance);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void clearDomain();
 
 
 	// Calculate field values
@@ -58,7 +72,7 @@ public:
 		static void ApplyFluidForce(UPrimitiveComponent* target);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
-		static void ApplyFluidTorque(UPrimitiveComponent* target);
+		static void ApplyFluidTorque(UPrimitiveComponent* target, bool simulate3D);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void ApplyFluid(UPrimitiveComponent* target);
