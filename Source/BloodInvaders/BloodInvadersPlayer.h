@@ -11,25 +11,13 @@ class BLOODINVADERS_API ABloodInvadersPlayer : public APawn
 {
 	GENERATED_BODY()
 
-	/* The mesh component */
-	UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* PlayerMeshComponent;
-
-	/** The camera */
-	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* CameraComponent;
-
-	/** Camera boom positioning the camera above the character */
-	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
-
 public:
 	// Sets default values for this pawn's properties
 	ABloodInvadersPlayer();
 
 	/** Offset from the player's location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-		FVector GunOffset;
+	FVector GunOffset;
 
 	/* How fast the weapon will fire */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
@@ -49,7 +37,7 @@ public:
 	// End Actor Interface
 
 	/* Fire a shot in the specified direction */
-	void FireShot();
+	virtual void FireShot();
 	void EnableFiring();
 	void DisableFiring();
 
@@ -61,13 +49,6 @@ public:
 	static const FName MoveRightBinding;
 	static const FName FireBinding;
 
-	/** Returns PlayerMeshComponent subobject **/
-	FORCEINLINE class UStaticMeshComponent* GetPlayerMeshComponent() const { return PlayerMeshComponent; }
-	/** Returns CameraComponent subobject **/
-	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
-	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-
 	//Accessor functions for the player's controller id
 	void SetControllerId(int NewControllerId);
 	FORCEINLINE int GetControllerId() const { return ControllerId; }
@@ -78,17 +59,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Boundaries, meta = (AllowPrivateAccess = "true"))
 	float YBoundary;
 
+	/* Function that moves the player according to user inputs. Called every tick*/
+	virtual void Move(float DeltaSecons);
+
 protected:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> Projectile;
 
-	/* The player's controller id*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Controller, meta = (AllowPrivateAccess = "true"))
-	int ControllerId;
 
 	/* Is the player currently firing?*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	bool bFiring;
+
+	/* The player's controller id*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Controller, meta = (AllowPrivateAccess = "true"))
+	int ControllerId;
+	
 
 
 private:

@@ -28,9 +28,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	FVector CameraRotation;
 protected:
-	/* The player blueprint*/
+	/* The player blueprints*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
-	TSubclassOf<class ABloodInvadersPlayer> PlayerBP;
+	TSubclassOf<class ABloodInvadersPlayer> BacteriumBP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
+	TSubclassOf<class ABloodInvadersPlayer> VirusBP;
 
 private:
 	/* Spawns the players and assigns the PlayerControllers*/

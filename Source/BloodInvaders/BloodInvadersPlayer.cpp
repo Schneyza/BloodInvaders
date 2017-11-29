@@ -5,11 +5,7 @@
 #include "TimerManager.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
-#include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
-#include "GameFramework/SpringArmComponent.h"
-#include "Engine/CollisionProfile.h"
-#include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 
@@ -19,16 +15,6 @@ const FName ABloodInvadersPlayer::FireBinding("Fire");
 
 ABloodInvadersPlayer::ABloodInvadersPlayer()
 {
-	// Create the mesh component
-	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
-	RootComponent = PlayerMeshComponent;
-	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-
-	if (PlayerMeshComponent->GetStaticMesh() == nullptr)
-	{
-		UE_LOG(LogClass, Error, TEXT("The StaticMesh Property of PlayerMeshComponent in BloodInvadersPlayer.cpp is null. Please make sure to assign the StaticMesh of PlayerMeshComponent in the Player Blueprint"));
-	}
-
 	// Movement
 	MoveSpeed = 1000.0f;
 	// Weapon
@@ -54,6 +40,15 @@ void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* Play
 }
 
 void ABloodInvadersPlayer::Tick(float DeltaSeconds)
+{
+	// Move the character
+	Move(DeltaSeconds);
+
+	// Create fire direction vector
+	FireShot();
+}
+
+void ABloodInvadersPlayer::Move(float DeltaSeconds)
 {
 	// Find movement direction
 	const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
@@ -98,9 +93,6 @@ void ABloodInvadersPlayer::Tick(float DeltaSeconds)
 			RootComponent->MoveComponent(Deflection, Rotation, true);
 		}
 	}
-
-	// Create fire direction vector
-	FireShot();
 }
 
 void ABloodInvadersPlayer::FireShot()

@@ -33,7 +33,7 @@ void ABloodInvadersGameMode::SpawnPlayers()
 		//UE_LOG(LogClass, Log, TEXT("World not null"));
 		//Spawn the players and set their controllers
 		TArray<AActor*> FoundActors;
-		if (PlayerBP != NULL)
+		if (BacteriumBP != NULL && VirusBP != NULL)
 		{
 			//UE_LOG(LogClass, Log, TEXT("PlayerBP not null"));
 			// Get all playerstarts in the world
@@ -64,8 +64,16 @@ void ABloodInvadersGameMode::SpawnPlayers()
 					//Set Spawn Rotation to rotation of PlayerSpawn object
 					FRotator SpawnRotation = FoundActors[i]->GetActorTransform().GetRotation().Rotator();
 
-					// Spawn the player pawn
-					ABloodInvadersPlayer* player = World->SpawnActor<ABloodInvadersPlayer>(PlayerBP, SpawnLocation, SpawnRotation, SpawnParams);
+					//Spawn the Bacterium for the first player and the virus for the second
+					ABloodInvadersPlayer* player;
+					if (i == 0)
+					{
+						player = World->SpawnActor<ABloodInvadersPlayer>(BacteriumBP, SpawnLocation, SpawnRotation, SpawnParams);
+					}
+					else
+					{
+						player = World->SpawnActor<ABloodInvadersPlayer>(VirusBP, SpawnLocation, SpawnRotation, SpawnParams);
+					}
 					player->SetControllerId(i);
 
 					// Possess the newly spawned player pawn
