@@ -8,6 +8,7 @@ AVirus::AVirus()
 {
 	// Create the mesh component
 	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
+	PlayerMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);		// set up a notification for when this component hits something
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 }

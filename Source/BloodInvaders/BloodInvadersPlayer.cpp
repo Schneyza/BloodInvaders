@@ -26,6 +26,9 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	//Map Boundaries
 	XBoundary = 660.0f;
 	YBoundary = 1180.0f;
+
+	// Set Playerhealth to defaultValue
+	PlayerHealth = 3;
 }
 
 void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -138,6 +141,24 @@ void ABloodInvadersPlayer::FireShot()
 	}
 }
 
+void ABloodInvadersPlayer::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogClass, Log, TEXT("Fired OnHit from player with controller id: %i"), ControllerId);
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
+	{
+		if (OtherActor->Tags.Contains("Enemy"))
+		{
+			//If we have hit an enemy, damage the player
+			DamagePlayer(1);
+			if (OtherActor->Tags.Contains("Neutrophil"))
+			{
+				//If we hit a Neutrophil, destroy the neutrophil
+				OtherActor->Destroy();
+			}
+		}
+	}
+}
+
 void ABloodInvadersPlayer::EnableFiring() {
 	bFiring = true;
 	//UE_LOG(LogClass, Log, TEXT("Player with ControllerId %i started firing"), ControllerId);
@@ -156,4 +177,35 @@ void ABloodInvadersPlayer::ShotTimerExpired()
 void ABloodInvadersPlayer::SetControllerId(int NewControllerId)
 {
 	ControllerId = NewControllerId;
+}
+
+void ABloodInvadersPlayer::DamagePlayer(int amount)
+{
+	//if we get more or equal damage to our health, the player dies
+	if (PlayerHealth <= amount)
+	{
+		PlayerHealth = 0;
+		// kill
+		// block player input
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
+		if (PlayerController)
+		{
+			PlayerController->SetCinematicMode(true, false, false, true, true);
+		}
+		// ragdoll the character
+		APawn* MyCharacter = UGameplayStatics::GetPlayerPawn(this, ControllerId);
+		if (MyCharacter)
+		{
+			MyCharacter->Destroy();
+		}
+	}
+	//otherwise reduce the players health by the specified amount and continue
+	else {
+		PlayerHealth -= amount;
+	}
+}
+
+int ABloodInvadersPlayer::GetPayerHealth()
+{
+	return PlayerHealth;
 }

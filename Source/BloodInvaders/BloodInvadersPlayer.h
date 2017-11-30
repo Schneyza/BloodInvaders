@@ -36,6 +36,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End Actor Interface
 
+	/** Function to handle the player hitting something */
+	UFUNCTION()
+	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
 	/* Fire a shot in the specified direction */
 	virtual void FireShot();
 	void EnableFiring();
@@ -62,6 +66,16 @@ public:
 	/* Function that moves the player according to user inputs. Called every tick*/
 	virtual void Move(float DeltaSecons);
 
+	/* Function to decrease the player's health */
+	UFUNCTION(BlueprintCallable, Category = Player)
+	virtual void DamagePlayer(int amount);
+
+	/* Returns the current HealthValue of the player*/
+	UFUNCTION(BlueprintPure, Category = Player)
+	int GetPayerHealth();
+
+	
+
 protected:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AProjectile> Projectile;
@@ -74,6 +88,10 @@ protected:
 	/* The player's controller id*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Controller, meta = (AllowPrivateAccess = "true"))
 	int ControllerId;
+
+	/* The player's Health*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	int PlayerHealth;
 	
 
 

@@ -9,6 +9,7 @@ ABacterium::ABacterium()
 {
 	// Create the mesh component
 	PlayerMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PlayerMesh"));
+	PlayerMeshComponent->OnComponentHit.AddDynamic(this, &ABacterium::OnHit);		// set up a notification for when this component hits something
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 }
