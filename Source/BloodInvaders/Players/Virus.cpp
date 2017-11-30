@@ -13,6 +13,13 @@ AVirus::AVirus()
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 }
 
+void AVirus::BeginPlay()
+{
+	Super::BeginPlay();
+	// Enable Generating hit events on collision
+	PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
+}
+
 void AVirus::Tick(float DeltaSeconds)
 {
 	/* Move the character*/
