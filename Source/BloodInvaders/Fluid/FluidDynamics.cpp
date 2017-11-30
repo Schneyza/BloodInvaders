@@ -67,15 +67,13 @@ float UFluidDynamics::getFluidPotential(FVector vec)
 	if (domainMode == 0) return insidePotential;
 	else {
 		if (vec.X < domainBot.X || vec.X > domainTop.X
-			|| vec.Y < domainBot.Y || vec.Y > domainTop.Y
-			|| vec.Z < domainBot.Z || vec.Z > domainTop.Z)
+			|| vec.Y < domainBot.Y || vec.Y > domainTop.Y)
 			return 0;
 		float nearestDistance = 
 			FMath::Min(FMath::Min(vec.X-domainBot.X, domainTop.X-vec.X),
-			FMath::Min(FMath::Min(vec.Y - domainBot.Y, domainTop.Y - vec.Y),
-				FMath::Min(vec.Z - domainBot.Z, domainTop.Z - vec.Z)));
+			FMath::Min(vec.Y - domainBot.Y, domainTop.Y - vec.Y));
 		if(nearestDistance > domainFalloffDistance)
-			return insidePotential;
+			return 0;
 		else {
 			float r = nearestDistance / domainFalloffDistance;
 			return insidePotential * (15/8.0*r - 10/8.0*r*r*r + 3/8.0*r*r*r*r*r);
