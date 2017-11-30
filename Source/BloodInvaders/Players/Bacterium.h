@@ -27,5 +27,7 @@ public:
 
 	virtual void Tick(float DeltaSeconds) override;
 
+	virtual void BeginPlay() override;
+
 	virtual void Move(float DeltaSeconds) override;
 };

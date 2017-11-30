@@ -23,6 +23,14 @@ void ABacterium::Tick(float DeltaSeconds)
 	Super::FireShot();
 }
 
+void ABacterium::BeginPlay()
+{
+	Super::BeginPlay();
+	// Enable Generating hit events on collision
+	PlayerMeshComponent->BodyInstance.SetInstanceNotifyRBCollision(true);
+	PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
+}
+
 /* Moves the character. Use this function to specify custom movement behaviour for the virus*/
 void ABacterium::Move(float DeltaSeconds)
 {

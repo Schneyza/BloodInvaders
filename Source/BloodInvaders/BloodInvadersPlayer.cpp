@@ -143,7 +143,6 @@ void ABloodInvadersPlayer::FireShot()
 
 void ABloodInvadersPlayer::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogClass, Log, TEXT("Fired OnHit from player with controller id: %i"), ControllerId);
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
 		if (OtherActor->Tags.Contains("Enemy"))
