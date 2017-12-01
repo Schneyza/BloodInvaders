@@ -8,6 +8,9 @@
 #include "Components/InputComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
+#include "Classes/Components/StaticMeshComponent.h"
+#include "Classes/Components/SkeletalMeshComponent.h"
+#include "BloodInvadersGameMode.h"
 
 const FName ABloodInvadersPlayer::MoveForwardBinding("MoveForward");
 const FName ABloodInvadersPlayer::MoveRightBinding("MoveRight");
@@ -184,19 +187,36 @@ void ABloodInvadersPlayer::DamagePlayer(int amount)
 	if (PlayerHealth <= amount)
 	{
 		PlayerHealth = 0;
-		// kill
 		// block player input
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
 		if (PlayerController)
 		{
 			PlayerController->SetCinematicMode(true, false, false, true, true);
 		}
-		// ragdoll the character
+		// disable the player character
 		APawn* MyCharacter = UGameplayStatics::GetPlayerPawn(this, ControllerId);
 		if (MyCharacter)
 		{
-			MyCharacter->Destroy();
+			MyCharacter->SetActorHiddenInGame(true);
+			MyCharacter->SetActorEnableCollision(ECollisionEnabled::NoCollision);
+			MyCharacter->SetActorTickEnabled(false);
 		}
+		// notify the GameMode about the player's death
+		UWorld* const World = GetWorld();
+		if (World)
+		{
+			AGameModeBase* GameMode = UGameplayStatics::GetGameMode(World);
+			if (GameMode)
+			{
+				ABloodInvadersGameMode* BIGameMode = Cast<ABloodInvadersGameMode>(GameMode);
+				if (BIGameMode)
+				{
+					BIGameMode->PlayerDeath(ControllerId);
+				}
+			}
+
+		}
+
 	}
 	//otherwise reduce the players health by the specified amount and continue
 	else {

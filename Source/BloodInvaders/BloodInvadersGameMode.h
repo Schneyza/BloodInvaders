@@ -27,12 +27,20 @@ public:
 	/* Rotation which the camera spawns with*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	FVector CameraRotation;
+
+	/* Notifies the GameMode that a player died, if both are dead the game is over*/
+	void PlayerDeath(int ControllerId);
+
+	/* Determines what happens when both players are dead*/
+	void EndGame();
 protected:
 	/* The player blueprints*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	TSubclassOf<class ABloodInvadersPlayer> BacteriumBP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player")
 	TSubclassOf<class ABloodInvadersPlayer> VirusBP;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Player")
+	TArray<bool> PlayersAlive;
 
 private:
 	/* Spawns the players and assigns the PlayerControllers*/

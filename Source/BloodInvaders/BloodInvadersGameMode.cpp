@@ -40,6 +40,7 @@ void ABloodInvadersGameMode::SpawnPlayers()
 			UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), FoundActors);
 			//Determine how many players to spawn
 			int PlayersToSpawn = FMath::Min(FoundActors.Num(), MaximumNumberOfPlayers);
+			PlayersAlive = { false, false };
 			for (int i = 0; i < PlayersToSpawn; i++)
 			{
 				if (FoundActors[i]->GetName().Contains("PlayerStartPie"))
@@ -51,6 +52,9 @@ void ABloodInvadersGameMode::SpawnPlayers()
 					//UE_LOG(LogClass, Log, TEXT("Create Player"));
 					UGameplayStatics::CreatePlayer(World, i, true);
 				}
+
+				//Set the player to be alive
+				PlayersAlive[i] = true;
 
 				// Check whether player has a playercontroller
 				APlayerController* controller = UGameplayStatics::GetPlayerController(World, i);
@@ -115,5 +119,27 @@ void ABloodInvadersGameMode::CreateCamera()
 		ACameraActor* Camera = World->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), SpawnLocation, SpawnRotation, SpawnParams);
 		APlayerController* Controller = UGameplayStatics::GetPlayerController(World, 0);
 		Controller->SetViewTargetWithBlend(Camera, 0.f, VTBlend_Linear, 0.f, false);
+	}
+}
+
+void ABloodInvadersGameMode::PlayerDeath(int ControllerId)
+{
+	// Set the respective player to be dead
+	PlayersAlive[ControllerId] = false;
+
+	//If both players the game is over
+	if (!PlayersAlive[0] && !PlayersAlive[1])
+	{
+		EndGame();
+	}
+}
+
+void ABloodInvadersGameMode::EndGame()
+{
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		// Load the MainMenu level
+		UGameplayStatics::OpenLevel((UObject*)UGameplayStatics::GetGameInstance(World), FName(TEXT("MainMenu")));
 	}
 }
