@@ -12,6 +12,7 @@ float UFluidDynamics::fluidInteractionStrength = 1.0;
 // Domain
 int UFluidDynamics::domainMode = 0; // 0: no domain, 1: box domain, 2: cyllinder domain
 float UFluidDynamics::domainFalloffDistance = 100;
+bool UFluidDynamics::hardWall = false;
 
 FVector UFluidDynamics::domainBot = FVector();
 FVector UFluidDynamics::domainTop = FVector();
@@ -46,26 +47,51 @@ void UFluidDynamics::setInteractionStrength(float factor)
 }
 
 
-void UFluidDynamics::setBoxDomain(FVector center, FVector extents, float falloffDistance)
+void UFluidDynamics::setBoxDomain(FVector center, FVector extents)
 {
 	domainMode = 1;
-	domainFalloffDistance = falloffDistance;
 	domainBot = center - extents / 2;
 	domainTop = center + extents / 2;
 }
 
-void UFluidDynamics::setInfCylinderDomain(FVector center, FVector direction, float radius, float falloffDistance)
+void UFluidDynamics::setInfCylinderDomain(FVector center, FVector direction, float radius)
 {
 	domainMode = 2;
-	domainFalloffDistance = falloffDistance;
 	domainCenter = center;
 	domainDirection = direction;
 	domainRadius = radius;
 }
 
+void UFluidDynamics::configureDomain(float falloffDistance, bool hard)
+{
+	domainFalloffDistance = falloffDistance;
+	hardWall = hard;
+}
+
 void UFluidDynamics::clearDomain()
 {
 	domainMode = 0;
+}
+
+bool UFluidDynamics::isInDomain(FVector vec)
+{
+	if (domainMode == 0) return true;
+	if (domainMode == 1)
+		return vec.X >= domainBot.X && vec.X <= domainTop.X
+		&& vec.Y >= domainBot.Y && vec.Y <= domainTop.Y;
+	else if (domainMode == 2)
+		return FMath::PointDistToLine(vec, domainDirection, domainCenter) < domainRadius;
+	else return false;
+}
+
+FVector UFluidDynamics::pointTowardsDomain(FVector loc)
+{
+	if (domainMode == 0) return FVector();
+	if (domainMode == 1) return FVector();
+	if (domainMode == 2) {
+		return FMath::ClosestPointOnInfiniteLine(domainCenter, domainCenter+domainDirection, loc) - loc;
+	}
+	return FVector();
 }
 
 
@@ -83,11 +109,10 @@ float UFluidDynamics::getFluidPotential(FVector vec)
 	// Calculate location w.r.t. domain boundary
 	float nearestDistance = 0;
 
+	if (!isInDomain(vec)) return 0;
+
 	// Box domain
 	if(domainMode == 1) {
-		if (vec.X < domainBot.X || vec.X > domainTop.X
-			|| vec.Y < domainBot.Y || vec.Y > domainTop.Y)
-			return 0;
 		nearestDistance = 
 			FMath::Min(FMath::Min(vec.X-domainBot.X, domainTop.X-vec.X),
 			FMath::Min(vec.Y - domainBot.Y, domainTop.Y - vec.Y));
@@ -101,7 +126,7 @@ float UFluidDynamics::getFluidPotential(FVector vec)
 
 	// Ramp potential to zero at domain boundary
 	if (nearestDistance > domainFalloffDistance)
-		return 0;
+		return insidePotential;
 	else {
 		float r = nearestDistance / domainFalloffDistance;
 		return insidePotential * (15 / 8.0*r - 10 / 8.0*r*r*r + 3 / 8.0*r*r*r*r*r);
@@ -141,12 +166,26 @@ void UFluidDynamics::MoveWithFluid(UPrimitiveComponent* target, float factor)
 
 void UFluidDynamics::ApplyFluidForce(UPrimitiveComponent* target)
 {
-	FVector fluidV = getFluidVelocity2D(target->GetComponentLocation());
+	FVector location = target->GetComponentLocation();
 	FVector objectV = target->GetPhysicsLinearVelocity();
-	FVector dV = fluidV - objectV;
 	float mass = target->GetMass();
-	FVector force = dV * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
-	target->AddForce(force);
+
+	if (isInDomain(location)) {
+		FVector fluidV = getFluidVelocity2D(location);
+		FVector dV = fluidV - objectV;
+		FVector force = dV * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
+		target->AddForce(force);
+	}
+	else {
+		FVector direction = pointTowardsDomain(location);
+		direction.Normalize();
+		if (FVector::DotProduct(direction, objectV) < 0 && hardWall) {
+			target->SetPhysicsLinearVelocity(direction*100);
+		}
+		else {
+			target->AddForce(direction * 1e1 * globalTurbulenceAmplitude * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f));
+		}
+	}
 }
 
 

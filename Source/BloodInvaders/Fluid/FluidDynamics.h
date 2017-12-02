@@ -23,6 +23,7 @@ private:
 	// Domain
 	static int domainMode;
 	static float domainFalloffDistance;
+	static bool hardWall;
 
 	static FVector domainBot;
 	static FVector domainTop;
@@ -30,6 +31,9 @@ private:
 	static FVector domainCenter;
 	static FVector domainDirection;
 	static float domainRadius;
+
+	static bool isInDomain(FVector location);
+	static FVector pointTowardsDomain(FVector location);
 public:
 
 	// Settings
@@ -49,11 +53,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void setInteractionStrength(float factor);
 
-	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
-		static void setBoxDomain(FVector center, FVector extents, float falloffDistance);
+
+	// Domain
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
-		static void setInfCylinderDomain(FVector center, FVector direction, float radius, float falloffDistance);
+		static void setBoxDomain(FVector center, FVector extents);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void setInfCylinderDomain(FVector center, FVector direction, float radius);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void configureDomain(float falloffDistance, bool hardWall);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void clearDomain();
