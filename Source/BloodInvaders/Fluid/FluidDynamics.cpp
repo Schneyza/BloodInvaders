@@ -10,10 +10,15 @@ float UFluidDynamics::globalScale = 1e-3;
 float UFluidDynamics::globalTurbulenceAmplitude = 10;
 float UFluidDynamics::fluidInteractionStrength = 1.0;
 // Domain
-int UFluidDynamics::domainMode = 0;
+int UFluidDynamics::domainMode = 0; // 0: no domain, 1: box domain, 2: cyllinder domain
 float UFluidDynamics::domainFalloffDistance = 100;
+
 FVector UFluidDynamics::domainBot = FVector();
 FVector UFluidDynamics::domainTop = FVector();
+
+FVector UFluidDynamics::domainCenter = FVector();
+FVector UFluidDynamics::domainDirection = FVector();
+float UFluidDynamics::domainRadius = 0;
 
 void UFluidDynamics::setTurbulenceScale(float scale)
 {
@@ -44,9 +49,18 @@ void UFluidDynamics::setInteractionStrength(float factor)
 void UFluidDynamics::setBoxDomain(FVector center, FVector extents, float falloffDistance)
 {
 	domainMode = 1;
+	domainFalloffDistance = falloffDistance;
 	domainBot = center - extents / 2;
 	domainTop = center + extents / 2;
+}
+
+void UFluidDynamics::setInfCylinderDomain(FVector center, FVector direction, float radius, float falloffDistance)
+{
+	domainMode = 2;
 	domainFalloffDistance = falloffDistance;
+	domainCenter = center;
+	domainDirection = direction;
+	domainRadius = radius;
 }
 
 void UFluidDynamics::clearDomain()
@@ -65,19 +79,32 @@ float UFluidDynamics::getFluidPotential(FVector vec)
 		+ 0.25 * USimplexNoiseBPLibrary::SimplexNoise2D(x * base * 4 - 1, y * base * 4)
 		+ 0;
 	if (domainMode == 0) return insidePotential;
-	else {
+
+	// Calculate location w.r.t. domain boundary
+	float nearestDistance = 0;
+
+	// Box domain
+	if(domainMode == 1) {
 		if (vec.X < domainBot.X || vec.X > domainTop.X
 			|| vec.Y < domainBot.Y || vec.Y > domainTop.Y)
 			return 0;
-		float nearestDistance = 
+		nearestDistance = 
 			FMath::Min(FMath::Min(vec.X-domainBot.X, domainTop.X-vec.X),
 			FMath::Min(vec.Y - domainBot.Y, domainTop.Y - vec.Y));
-		if(nearestDistance > domainFalloffDistance)
-			return 0;
-		else {
-			float r = nearestDistance / domainFalloffDistance;
-			return insidePotential * (15/8.0*r - 10/8.0*r*r*r + 3/8.0*r*r*r*r*r);
-		}
+	}
+	// Cyllinder domain
+	else if (domainMode == 2) {
+		float d = FMath::PointDistToLine(vec, domainDirection, domainCenter);
+		if (d > domainRadius) return 0;
+		nearestDistance = domainRadius - d;
+	}
+
+	// Ramp potential to zero at domain boundary
+	if (nearestDistance > domainFalloffDistance)
+		return 0;
+	else {
+		float r = nearestDistance / domainFalloffDistance;
+		return insidePotential * (15 / 8.0*r - 10 / 8.0*r*r*r + 3 / 8.0*r*r*r*r*r);
 	}
 }
 

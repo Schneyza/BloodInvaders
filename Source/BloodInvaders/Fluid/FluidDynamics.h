@@ -23,8 +23,13 @@ private:
 	// Domain
 	static int domainMode;
 	static float domainFalloffDistance;
+
 	static FVector domainBot;
 	static FVector domainTop;
+
+	static FVector domainCenter;
+	static FVector domainDirection;
+	static float domainRadius;
 public:
 
 	// Settings
@@ -46,6 +51,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void setBoxDomain(FVector center, FVector extents, float falloffDistance);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void setInfCylinderDomain(FVector center, FVector direction, float radius, float falloffDistance);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void clearDomain();
