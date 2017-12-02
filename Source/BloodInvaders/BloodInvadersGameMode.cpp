@@ -76,11 +76,11 @@ void ABloodInvadersGameMode::SpawnPlayers()
 					ABloodInvadersPlayer* player;
 					if (i == 0)
 					{
-						player = World->SpawnActor<ABloodInvadersPlayer>(BacteriumBP, SpawnLocation, SpawnRotation, SpawnParams);
+						player = World->SpawnActor<ABloodInvadersPlayer>(VirusBP, SpawnLocation, SpawnRotation, SpawnParams);
 					}
 					else
 					{
-						player = World->SpawnActor<ABloodInvadersPlayer>(VirusBP, SpawnLocation, SpawnRotation, SpawnParams);
+						player = World->SpawnActor<ABloodInvadersPlayer>(BacteriumBP, SpawnLocation, SpawnRotation, SpawnParams);
 					}
 					player->SetControllerId(i);
 
