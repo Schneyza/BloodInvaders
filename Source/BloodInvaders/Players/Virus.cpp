@@ -10,21 +10,21 @@ const FName AVirus::InfectBinding("Infect");
 
 AVirus::AVirus()
 {
-<<<<<<< Updated upstream
 	// Create the Sphere Component
 	PlayerSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("PlayerSphere"));
 	RootComponent = PlayerSphereComponent;
 	PlayerSphereComponent->SetSphereRadius(1.f);
 	PlayerSphereComponent->SetHiddenInGame(true);
 	PlayerSphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-=======
+
+	/*
 	// Create the mesh component
 	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
 	PlayerMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);		// set up a notification for when this component hits something
 
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
->>>>>>> Stashed changes
+	*/
 }
 
 void AVirus::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -73,14 +73,14 @@ void AVirus::BeginPlay()
 {
 	Super::BeginPlay();
 	// Enable Generating hit events on collision
-<<<<<<< Updated upstream
 	//PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
-=======
+
+	/*
 	PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
 
 	PlayerMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AVirus::OnOverlapBegin);
 	PlayerMeshComponent->OnComponentEndOverlap.AddDynamic(this, &AVirus::OnOverlapEnd);
->>>>>>> Stashed changes
+	*/
 }
 
 void AVirus::Tick(float DeltaSeconds)

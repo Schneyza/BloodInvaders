@@ -42,12 +42,9 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Move(float DeltaSeconds) override;
-<<<<<<< Updated upstream
 	
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 	void MoveViruses();
-=======
->>>>>>> Stashed changes
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
