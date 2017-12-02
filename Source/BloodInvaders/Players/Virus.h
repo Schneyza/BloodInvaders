@@ -14,16 +14,16 @@ class BLOODINVADERS_API AVirus : public ABloodInvadersPlayer
 {
 	GENERATED_BODY()
 
-	/* The mesh component */
-	UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* PlayerMeshComponent;
+	/* The Sphere Component that controls the player*/
+	UPROPERTY(Category = Player, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* PlayerSphereComponent;
 
 public:
 	/* Constructor that sets default values*/
 	AVirus();
 
 	/** Returns PlayerMeshComponent subobject **/
-	FORCEINLINE class UStaticMeshComponent* GetPlayerMeshComponent() const { return PlayerMeshComponent; }
+	FORCEINLINE class USphereComponent* GetPlayerSphereComponent() const { return PlayerSphereComponent; }
 
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -31,7 +31,8 @@ public:
 
 	virtual void Move(float DeltaSeconds) override;
 	
-
+	UFUNCTION(BlueprintImplementableEvent, Category = Player)
+	void MoveViruses();
 
 
 };

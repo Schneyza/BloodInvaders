@@ -2,28 +2,33 @@
 
 #include "Virus.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
 
 AVirus::AVirus()
 {
-	// Create the mesh component
-	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
-	PlayerMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);		// set up a notification for when this component hits something
-	RootComponent = PlayerMeshComponent;
-	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	// Create the Sphere Component
+	PlayerSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("PlayerSphere"));
+	RootComponent = PlayerSphereComponent;
+	PlayerSphereComponent->SetSphereRadius(1.f);
+	PlayerSphereComponent->SetHiddenInGame(true);
+	PlayerSphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AVirus::BeginPlay()
 {
 	Super::BeginPlay();
 	// Enable Generating hit events on collision
-	PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
+	//PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
 }
 
 void AVirus::Tick(float DeltaSeconds)
 {
 	/* Move the character*/
 	Move(DeltaSeconds);
+
+	/* Move the viruses*/
+	MoveViruses();
 
 	/* Try to fire a shot*/
 	Super::FireShot();
