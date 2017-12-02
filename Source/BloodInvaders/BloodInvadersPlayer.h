@@ -106,6 +106,6 @@ protected:
 
 
 
-private
+private:
 
 };
