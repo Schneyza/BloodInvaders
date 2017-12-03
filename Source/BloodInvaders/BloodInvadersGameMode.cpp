@@ -15,13 +15,12 @@ ABloodInvadersGameMode::ABloodInvadersGameMode()
 {
 	// Set default camera parameters
 	CameraZValue = 1630.0f;
-	CameraRotation = FVector(0.f, 0.f, -90.f);
 }
 
 void ABloodInvadersGameMode::BeginPlay()
 {
 	SpawnPlayers();
-	CreateCamera();
+	//CreateCamera();
 }
 
 void ABloodInvadersGameMode::SpawnPlayers()
@@ -117,8 +116,10 @@ void ABloodInvadersGameMode::CreateCamera()
 
 		// Spawn the player pawn
 		ACameraActor* Camera = World->SpawnActor<ACameraActor>(ACameraActor::StaticClass(), SpawnLocation, SpawnRotation, SpawnParams);
+
 		APlayerController* Controller = UGameplayStatics::GetPlayerController(World, 0);
 		Controller->SetViewTargetWithBlend(Camera, 0.f, VTBlend_Linear, 0.f, false);
+		Camera->Destroy();
 	}
 }
 

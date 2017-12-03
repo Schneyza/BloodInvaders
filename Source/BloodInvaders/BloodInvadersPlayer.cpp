@@ -27,8 +27,8 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	bFiring = false;
 
 	//Map Boundaries
-	XBoundary = 660.0f;
-	YBoundary = 1180.0f;
+	XBoundary = 1000.0f;
+	YBoundary = 650.0f;
 
 	// Set Playerhealth to defaultValue
 	PlayerHealth = 3;
@@ -61,7 +61,7 @@ void ABloodInvadersPlayer::Move(float DeltaSeconds)
 	const float RightValue = GetInputAxisValue(MoveRightBinding);
 
 	// Clamp max size so that (X=1, Y=1) doesn't cause faster movement in diagonal directions
-	const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
+	const FVector MoveDirection = FVector(RightValue, -ForwardValue, 0.f).GetClampedToMaxSize(1.0f);
 
 	// Calculate  movement
 	const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
@@ -79,8 +79,8 @@ void ABloodInvadersPlayer::Move(float DeltaSeconds)
 			const FVector validPosition = FVector(XBoundary, GetTransform().GetLocation().Y, GetTransform().GetLocation().Z);
 			SetActorLocation(validPosition, false);
 		}
-		if (GetTransform().GetLocation().X < -XBoundary) {
-			const FVector validPosition = FVector(-XBoundary, GetTransform().GetLocation().Y, GetTransform().GetLocation().Z);
+		if (GetTransform().GetLocation().X < 0) {
+			const FVector validPosition = FVector(0, GetTransform().GetLocation().Y, GetTransform().GetLocation().Z);
 			SetActorLocation(validPosition, false);
 		}
 		if (GetTransform().GetLocation().Y > YBoundary) {
@@ -108,9 +108,9 @@ void ABloodInvadersPlayer::FireShot()
 	{
 		if (bFiring) {
 			// If we are pressing fire stick in a direction
-			const FRotator FireRotation = FRotator(0.0f, 90.0f, .0f);
+			const FRotator FireRotation = FRotator(0.0f, 0.0f, .0f);
 			// Spawn projectile at an offset from this pawn
-			const FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
+			const FVector SpawnLocation = GetActorLocation() + GunOffset;
 
 			UWorld* const World = GetWorld();
 			if (World != NULL)
