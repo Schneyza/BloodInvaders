@@ -201,7 +201,7 @@ void UFluidDynamics::ApplyFluidTorque(UPrimitiveComponent* target, bool simulate
 	FVector objectT = target->GetPhysicsAngularVelocity();
 	FVector dT = fluidT - objectT;
 	float mass = target->GetMass();
-	FVector torque = dT * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
+	FVector torque = dT * 4 * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
 	target->AddTorque(torque);
 }
 
