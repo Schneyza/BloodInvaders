@@ -56,7 +56,7 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 				if (VirusPlayer)
 				{
 					// Damage the player
-					VirusPlayer->DamagePlayer(1);
+					VirusPlayer->DamagePlayerWithReference(1, VirusPlayer->GetPlayerHealthReference());
 				}
 			}
 

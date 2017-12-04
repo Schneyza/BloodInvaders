@@ -183,10 +183,16 @@ void ABloodInvadersPlayer::SetControllerId(int NewControllerId)
 
 void ABloodInvadersPlayer::DamagePlayer(int amount)
 {
+	int& HealthReference = PlayerHealth;
+	DamagePlayerWithReference(amount, HealthReference);
+}
+
+void ABloodInvadersPlayer::DamagePlayerWithReference(int amount, int& PlayerHealthReference)
+{
 	//if we get more or equal damage to our health, the player dies
-	if (PlayerHealth <= amount)
+	if (PlayerHealthReference <= amount)
 	{
-		PlayerHealth = 0;
+		PlayerHealthReference = 0;
 		// block player input
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
 		if (PlayerController)
@@ -220,7 +226,7 @@ void ABloodInvadersPlayer::DamagePlayer(int amount)
 	}
 	//otherwise reduce the players health by the specified amount and continue
 	else {
-		PlayerHealth -= amount;
+		PlayerHealthReference -= amount;
 	}
 }
 

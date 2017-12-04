@@ -14,6 +14,8 @@ class BLOODINVADERS_API ASingleVirus : public AActor
 	/* The mesh for a SingleVirus*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* VirusMesh;
+
+	
 	
 public:	
 

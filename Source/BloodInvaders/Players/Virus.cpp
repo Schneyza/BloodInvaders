@@ -25,6 +25,8 @@ AVirus::AVirus()
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	*/
+	InitialVirusNumber = 5;
+	PlayerHealth = InitialVirusNumber;
 }
 
 void AVirus::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -99,6 +101,12 @@ void AVirus::Tick(float DeltaSeconds)
 void AVirus::Move(float DeltaSeconds)
 {
 	Super::Move(DeltaSeconds);
+}
+
+int& AVirus::GetPlayerHealthReference()
+{
+	int& result = PlayerHealth;
+	return result;
 }
 
 

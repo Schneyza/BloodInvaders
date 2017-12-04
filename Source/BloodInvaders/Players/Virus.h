@@ -23,6 +23,10 @@ class BLOODINVADERS_API AVirus : public ABloodInvadersPlayer
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	bool bInfecting;
 
+	/* The initial number of SingleViruses, also the inital amount of Health for the virus*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	int InitialVirusNumber;
+
 	std::list<AActor*> infectableCells;
 
 public:
@@ -50,4 +54,6 @@ public:
 
 	static const FName InfectBinding;
 	void TryInfect();
+
+	int& GetPlayerHealthReference();
 };

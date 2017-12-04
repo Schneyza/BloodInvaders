@@ -87,6 +87,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Player)
 	virtual void DamagePlayer(int amount);
 
+	UFUNCTION(BlueprintCallable, Category = Player)
+	virtual void DamagePlayerWithReference(int amount, int& PlayerHealthReference);
+
 	/* Returns the current HealthValue of the player*/
 	UFUNCTION(BlueprintPure, Category = Player)
 	int GetPayerHealth();
