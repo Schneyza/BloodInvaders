@@ -27,8 +27,8 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	bFiring = false;
 
 	//Map Boundaries
-	XBoundary = 1000.0f;
-	YBoundary = 650.0f;
+	XBoundary = 2750.0f;
+	YBoundary = 750.0f;
 
 	// Set Playerhealth to defaultValue
 	PlayerHealth = 3;
