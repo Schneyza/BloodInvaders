@@ -49,7 +49,10 @@ void ABloodInvadersGameMode::SpawnPlayers()
 				// Create the player (not the actor); skip first player since he has a player be default
 				if (i != 0) {
 					//UE_LOG(LogClass, Log, TEXT("Create Player"));
-					UGameplayStatics::CreatePlayer(World, i, true);
+					if (UGameplayStatics::GetPlayerController(World, i) == NULL)
+					{
+						UGameplayStatics::CreatePlayer(World, i, true);
+					}
 				}
 
 				//Set the player to be alive
