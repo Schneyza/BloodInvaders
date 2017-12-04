@@ -27,7 +27,7 @@ void ASingleVirus::BeginPlay()
 	// Enable generating hit events
 	VirusMesh->SetNotifyRigidBodyCollision(true);
 	// Physics
-	//VirusMesh->SetSimulatePhysics(true);
+	VirusMesh->SetSimulatePhysics(true);
 
 }
 
@@ -35,6 +35,7 @@ void ASingleVirus::BeginPlay()
 void ASingleVirus::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	MoveWithPlayer();
 	MoveWithFluid();
 
 }
@@ -66,17 +67,9 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 			}
 
 			// Destroy the virus (handle other collisions before this!
-			DestroySingleVirus();
+			Destroy();
 		}
 	}
-}
-
-void ASingleVirus::DestroySingleVirus() {
-	// Remove SingleVirus from viruses array
-	RemoveSingleVirusFromArray();
-
-	//Destroy the SingleVirus
-	Destroy();
 }
 
 

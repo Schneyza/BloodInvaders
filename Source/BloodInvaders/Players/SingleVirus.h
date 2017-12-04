@@ -29,20 +29,14 @@ public:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-	UFUNCTION(BluePrintImplementableEvent, Category = Fluid)
+	UFUNCTION(BlueprintImplementableEvent, Category = Fluid)
 	void MoveWithFluid();
 
-	UFUNCTION(BluePrintImplementableEvent, Category = Virus)
-	void RemoveSingleVirusFromArray();
-
-	///** Returns ProjectileMesh subobject **/
-	//FORCEINLINE UStaticMeshComponent* GetVirusMesh() const { return VirusMesh; }
+	UFUNCTION(BlueprintImplementableEvent)
+	void MoveWithPlayer();
 
 	UFUNCTION(BlueprintPure, Category = Mesh)
 	UStaticMeshComponent* GetVirusMeshComponent() const;
-
-	UFUNCTION(BlueprintCallable, Category = Virus)
-		void DestroySingleVirus();
 
 protected:
 	// Called when the game starts or when spawned
