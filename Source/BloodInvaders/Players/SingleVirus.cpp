@@ -79,3 +79,8 @@ void ASingleVirus::DestroySingleVirus() {
 	Destroy();
 }
 
+
+UStaticMeshComponent* ASingleVirus::GetVirusMeshComponent() const
+{
+	return VirusMesh;
+}

@@ -35,8 +35,11 @@ public:
 	UFUNCTION(BluePrintImplementableEvent, Category = Virus)
 	void RemoveSingleVirusFromArray();
 
-	/** Returns ProjectileMesh subobject **/
-	FORCEINLINE UStaticMeshComponent* GetVirusMesh() const { return VirusMesh; }
+	///** Returns ProjectileMesh subobject **/
+	//FORCEINLINE UStaticMeshComponent* GetVirusMesh() const { return VirusMesh; }
+
+	UFUNCTION(BlueprintPure, Category = Mesh)
+	UStaticMeshComponent* GetVirusMeshComponent() const;
 
 	UFUNCTION(BlueprintCallable, Category = Virus)
 		void DestroySingleVirus();
