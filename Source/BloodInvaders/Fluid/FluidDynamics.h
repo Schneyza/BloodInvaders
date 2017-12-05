@@ -20,6 +20,7 @@ private:
 	static float globalScale;
 	static float globalTurbulenceAmplitude;
 	static float fluidInteractionStrength;
+	static float laminarRegime;
 	// Domain
 	static int domainMode;
 	static float domainFalloffDistance;
@@ -34,6 +35,7 @@ private:
 
 	static bool isInDomain(FVector location);
 	static FVector pointTowardsDomain(FVector location);
+	static float flowRegimeFactor(FVector deltaVelocity);
 public:
 
 	// Settings
@@ -52,6 +54,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void setInteractionStrength(float factor);
+
+	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
+		static void setLaminarRegime(float maxVelocity);
 
 
 	// Domain

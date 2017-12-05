@@ -9,6 +9,7 @@ FVector UFluidDynamics::linearVelocity = FVector(100, 0, 0);
 float UFluidDynamics::globalScale = 1e-3;
 float UFluidDynamics::globalTurbulenceAmplitude = 10;
 float UFluidDynamics::fluidInteractionStrength = 1.0;
+float UFluidDynamics::laminarRegime = 1000;
 // Domain
 int UFluidDynamics::domainMode = 0; // 0: no domain, 1: box domain, 2: cyllinder domain
 float UFluidDynamics::domainFalloffDistance = 100;
@@ -44,6 +45,11 @@ void UFluidDynamics::setTurbulenceAmplitude(float amplitude)
 void UFluidDynamics::setInteractionStrength(float factor)
 {
 	fluidInteractionStrength = factor;
+}
+
+void UFluidDynamics::setLaminarRegime(float maxVelocity)
+{
+	laminarRegime = maxVelocity;
 }
 
 
@@ -164,6 +170,14 @@ void UFluidDynamics::MoveWithFluid(UPrimitiveComponent* target, float factor)
 }
 
 
+float UFluidDynamics::flowRegimeFactor(FVector deltaVelocity)
+{
+	float v = deltaVelocity.Size();
+	if (v <= laminarRegime) return 1;
+	else return v / laminarRegime;
+}
+
+
 void UFluidDynamics::ApplyFluidForce(UPrimitiveComponent* target)
 {
 	FVector location = target->GetComponentLocation();
@@ -173,7 +187,7 @@ void UFluidDynamics::ApplyFluidForce(UPrimitiveComponent* target)
 	if (isInDomain(location)) {
 		FVector fluidV = getFluidVelocity2D(location);
 		FVector dV = fluidV - objectV;
-		FVector force = dV * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
+		FVector force = dV * flowRegimeFactor(dV) * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
 		target->AddForce(force);
 	}
 	else {
@@ -183,7 +197,8 @@ void UFluidDynamics::ApplyFluidForce(UPrimitiveComponent* target)
 			target->SetPhysicsLinearVelocity(direction*100);
 		}
 		else {
-			target->AddForce(direction * 1e1 * globalTurbulenceAmplitude * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f));
+			FVector v = direction * globalTurbulenceAmplitude;
+			target->AddForce(v * flowRegimeFactor(v) * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f));
 		}
 	}
 }
@@ -201,7 +216,8 @@ void UFluidDynamics::ApplyFluidTorque(UPrimitiveComponent* target, bool simulate
 	FVector objectT = target->GetPhysicsAngularVelocity();
 	FVector dT = fluidT - objectT;
 	float mass = target->GetMass();
-	FVector torque = dT * 4 * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
+	float rfac = flowRegimeFactor(dT * 0.5 * FGenericPlatformMath::Pow(mass, 0.33333f));
+	FVector torque = dT * 4 * rfac * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
 	target->AddTorque(torque);
 }
 
