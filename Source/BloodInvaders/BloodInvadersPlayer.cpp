@@ -12,10 +12,6 @@
 #include "Classes/Components/SkeletalMeshComponent.h"
 #include "BloodInvadersGameMode.h"
 
-const FName ABloodInvadersPlayer::MoveForwardBinding("MoveForward");
-const FName ABloodInvadersPlayer::MoveRightBinding("MoveRight");
-const FName ABloodInvadersPlayer::FireBinding("Fire");
-
 ABloodInvadersPlayer::ABloodInvadersPlayer()
 {
 	// Movement
@@ -39,10 +35,27 @@ void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* Play
 	check(PlayerInputComponent);
 
 	// set up gameplay key bindings
-	PlayerInputComponent->BindAxis(MoveForwardBinding);
+	/*PlayerInputComponent->BindAxis(MoveForwardBinding);
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &ABloodInvadersPlayer::EnableFiring);
-	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring);
+	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring);*/
+
+	if (ControllerId == 0)
+	{
+		MoveForwardBinding = "MoveForward_P1";
+		MoveRightBinding = "MoveRight_P1";
+		FireBinding = "Fire_P1";
+	}
+	else if (ControllerId == 1)
+	{
+		MoveForwardBinding = "MoveForward_P2";
+		MoveRightBinding = "MoveRight_P2";
+		FireBinding = "Fire_P2";
+	}
+	InputComponent->BindAxis(MoveForwardBinding);
+	InputComponent->BindAxis(MoveRightBinding);
+	InputComponent->BindAction(FireBinding, IE_Pressed, this, &ABloodInvadersPlayer::EnableFiring);
+	InputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring); 
 }
 
 void ABloodInvadersPlayer::Tick(float DeltaSeconds)

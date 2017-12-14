@@ -32,9 +32,9 @@ public:
 	class USoundBase* FireSound;
 
 	// Static names for axis bindings
-	static const FName MoveForwardBinding;
-	static const FName MoveRightBinding;
-	static const FName FireBinding;
+	FName MoveForwardBinding;
+	FName MoveRightBinding;
+	FName FireBinding;
 
 	/* Borders restricting the movement of the player to the screen boundaries*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Boundaries, meta = (AllowPrivateAccess = "true"))
