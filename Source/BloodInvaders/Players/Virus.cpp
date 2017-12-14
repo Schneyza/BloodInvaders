@@ -29,14 +29,6 @@ AVirus::AVirus()
 	PlayerHealth = InitialVirusNumber;
 }
 
-void AVirus::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
-{
-	ABloodInvadersPlayer::SetupPlayerInputComponent(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction(InfectBinding, IE_Repeat, this, &AVirus::TryInfect);
-	PlayerInputComponent->BindAction(InfectBinding, IE_Released, this, &AVirus::TryInfect);
-}
-
 void AVirus::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	UE_LOG(LogClass, Log, TEXT("Overlap: %i"), infectableCells.size());
@@ -58,6 +50,11 @@ void AVirus::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActo
 			infectableCells.remove(OtherActor);
 		}
 	}
+}
+
+void AVirus::Ability1()
+{
+	TryInfect();
 }
 
 void AVirus::TryInfect() {

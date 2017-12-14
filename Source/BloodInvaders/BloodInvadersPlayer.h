@@ -35,6 +35,8 @@ public:
 	FName MoveForwardBinding;
 	FName MoveRightBinding;
 	FName FireBinding;
+	FName Ability1Binding;
+	FName Ability2Binding;
 
 	/* Borders restricting the movement of the player to the screen boundaries*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Boundaries, meta = (AllowPrivateAccess = "true"))
@@ -100,6 +102,10 @@ public:
 	void DisableFiring();
 	/* Handler for the fire timer expiry */
 	void ShotTimerExpired();
+
+	/* Handlers for abilities; Have to be overrideen in subclasses for ability functionality*/
+	virtual void Ability1();
+	virtual void Ability2();
 
 	//Accessor functions for the player's controller id
 	void SetControllerId(int NewControllerId);

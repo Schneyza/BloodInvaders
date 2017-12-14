@@ -50,10 +50,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 	void MoveViruses();
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
+	virtual void Ability1() override;
 
 	static const FName InfectBinding;
 	void TryInfect();
+	
 
 	int& GetPlayerHealthReference();
 };

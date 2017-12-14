@@ -34,28 +34,28 @@ void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* Play
 {
 	check(PlayerInputComponent);
 
-	// set up gameplay key bindings
-	/*PlayerInputComponent->BindAxis(MoveForwardBinding);
-	PlayerInputComponent->BindAxis(MoveRightBinding);
-	PlayerInputComponent->BindAction(FireBinding, IE_Pressed, this, &ABloodInvadersPlayer::EnableFiring);
-	PlayerInputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring);*/
-
 	if (ControllerId == 0)
 	{
 		MoveForwardBinding = "MoveForward_P1";
 		MoveRightBinding = "MoveRight_P1";
 		FireBinding = "Fire_P1";
+		Ability1Binding = "Ability1_P1";
+		Ability2Binding = "Ability2_P1";
 	}
 	else if (ControllerId == 1)
 	{
 		MoveForwardBinding = "MoveForward_P2";
 		MoveRightBinding = "MoveRight_P2";
 		FireBinding = "Fire_P2";
+		Ability1Binding = "Ability1_P2";
+		Ability2Binding = "Ability2_P2";
 	}
 	InputComponent->BindAxis(MoveForwardBinding);
 	InputComponent->BindAxis(MoveRightBinding);
 	InputComponent->BindAction(FireBinding, IE_Pressed, this, &ABloodInvadersPlayer::EnableFiring);
-	InputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring); 
+	InputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring);
+	InputComponent->BindAction(Ability1Binding, IE_Pressed, this, &ABloodInvadersPlayer::Ability1);
+	InputComponent->BindAction(Ability2Binding, IE_Pressed, this, &ABloodInvadersPlayer::Ability2);
 }
 
 void ABloodInvadersPlayer::Tick(float DeltaSeconds)
@@ -247,3 +247,6 @@ int ABloodInvadersPlayer::GetPayerHealth()
 {
 	return PlayerHealth;
 }
+
+void ABloodInvadersPlayer::Ability1() {}
+void ABloodInvadersPlayer::Ability2() {}
