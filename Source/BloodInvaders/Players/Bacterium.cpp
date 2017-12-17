@@ -37,4 +37,26 @@ void ABacterium::Move(float DeltaSeconds)
 	Super::Move(DeltaSeconds);
 }
 
+void ABacterium::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
+	{
+		if (OtherActor->Tags.Contains("RBC"))
+		{
+			OtherActor->Destroy();
+		}
+	}
+}
+
+void ABacterium::Ability1()
+{
+
+}
+
+void ABacterium::EatBloodCell()
+{
+
+}
+
+
 

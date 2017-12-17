@@ -7,16 +7,16 @@
 #include "Bacterium.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class BLOODINVADERS_API ABacterium : public ABloodInvadersPlayer
 {
 	GENERATED_BODY()
 
-	/* The mesh component */
-	UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	class USkeletalMeshComponent* PlayerMeshComponent;
+		/* The mesh component */
+		UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class USkeletalMeshComponent* PlayerMeshComponent;
 
 public:
 	/* Constructor that sets default values*/
@@ -30,4 +30,11 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Move(float DeltaSeconds) override;
+
+	virtual void Ability1() override;
+
+	virtual void EatBloodCell();
+
+	UFUNCTION()
+		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 };

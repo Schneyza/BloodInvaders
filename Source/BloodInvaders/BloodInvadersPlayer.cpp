@@ -165,11 +165,6 @@ void ABloodInvadersPlayer::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActo
 		{
 			//If we have hit an enemy, damage the player
 			DamagePlayer(1);
-			if (OtherActor->Tags.Contains("Neutrophil"))
-			{
-				//If we hit a Neutrophil, destroy the neutrophil
-				OtherActor->Destroy();
-			}
 		}
 	}
 }
@@ -243,7 +238,7 @@ void ABloodInvadersPlayer::DamagePlayerWithReference(int amount, int& PlayerHeal
 	}
 }
 
-int ABloodInvadersPlayer::GetPayerHealth()
+int ABloodInvadersPlayer::GetPlayerHealth()
 {
 	return PlayerHealth;
 }

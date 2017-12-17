@@ -94,7 +94,7 @@ public:
 
 	/* Returns the current HealthValue of the player*/
 	UFUNCTION(BlueprintPure, Category = Player)
-	int GetPayerHealth();
+	int GetPlayerHealth();
 
 	/* Fire a shot in the specified direction */
 	virtual void FireShot();
