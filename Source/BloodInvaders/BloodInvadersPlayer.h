@@ -11,25 +11,25 @@ class BLOODINVADERS_API ABloodInvadersPlayer : public APawn
 {
 	GENERATED_BODY()
 
-//Member Variables
+		//Member Variables
 public:
-	
+
 
 	/** Offset from the player's location to spawn projectiles */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	FVector GunOffset;
+		FVector GunOffset;
 
 	/* How fast the weapon will fire */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	float FireRate;
+		float FireRate;
 
 	/* The speed our player's moves around the level */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
-	float MoveSpeed;
+		float MoveSpeed;
 
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
-	class USoundBase* FireSound;
+		class USoundBase* FireSound;
 
 	// Static names for axis bindings
 	FName MoveForwardBinding;
@@ -40,26 +40,26 @@ public:
 
 	/* Borders restricting the movement of the player to the screen boundaries*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Boundaries, meta = (AllowPrivateAccess = "true"))
-	float XBoundary;
+		float XBoundary;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Boundaries, meta = (AllowPrivateAccess = "true"))
-	float YBoundary;
+		float YBoundary;
 
 protected:
 	/* The projectile that is spawned when the player shoots*/
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class AProjectile> Projectile;
+		TSubclassOf<class AProjectile> Projectile;
 
 	/* Is the player currently firing?*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
-	bool bFiring;
+		bool bFiring;
 
 	/* The player's controller id*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Controller, meta = (AllowPrivateAccess = "true"))
-	int ControllerId;
+		int ControllerId;
 
 	/* The player's Health*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
-	int PlayerHealth;
+		int PlayerHealth;
 
 private:
 	/* Flag to control firing  */
@@ -68,7 +68,7 @@ private:
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
 
-// Methods
+	// Methods
 public:
 	// Sets default values for this pawn's properties
 	ABloodInvadersPlayer();
@@ -83,18 +83,25 @@ public:
 
 	/** Function to handle the player hitting something */
 	UFUNCTION()
-	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	/* Function to decrease the player's health */
 	UFUNCTION(BlueprintCallable, Category = Player)
-	virtual void DamagePlayer(int amount);
+		virtual void DamagePlayer(int amount);
+
+	/* Function to increase the player's health */
+	UFUNCTION(BlueprintCallable, Category = Player)
+		virtual void HealPlayer(int amount);
 
 	UFUNCTION(BlueprintCallable, Category = Player)
-	virtual void DamagePlayerWithReference(int amount, int& PlayerHealthReference);
+		virtual void DamagePlayerWithReference(int amount, int& PlayerHealthReference);
+
+	UFUNCTION(BlueprintCallable, Category = Player)
+		virtual void HealPlayerWithReference(int amount, int& PlayerHealthReference);
 
 	/* Returns the current HealthValue of the player*/
 	UFUNCTION(BlueprintPure, Category = Player)
-	int GetPlayerHealth();
+		int GetPlayerHealth();
 
 	/* Fire a shot in the specified direction */
 	virtual void FireShot();
@@ -110,7 +117,7 @@ public:
 	//Accessor functions for the player's controller id
 	void SetControllerId(int NewControllerId);
 	FORCEINLINE int GetControllerId() const { return ControllerId; }
-	
+
 protected:
 
 

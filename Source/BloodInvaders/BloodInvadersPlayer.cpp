@@ -195,6 +195,12 @@ void ABloodInvadersPlayer::DamagePlayer(int amount)
 	DamagePlayerWithReference(amount, HealthReference);
 }
 
+void ABloodInvadersPlayer::HealPlayer(int amount)
+{
+	int& HealthReference = PlayerHealth;
+	HealPlayerWithReference(amount, HealthReference);
+}
+
 void ABloodInvadersPlayer::DamagePlayerWithReference(int amount, int& PlayerHealthReference)
 {
 	//if we get more or equal damage to our health, the player dies
@@ -236,6 +242,11 @@ void ABloodInvadersPlayer::DamagePlayerWithReference(int amount, int& PlayerHeal
 	else {
 		PlayerHealthReference -= amount;
 	}
+}
+
+void ABloodInvadersPlayer::HealPlayerWithReference(int amount, int& PlayerHealthReference)
+{
+	PlayerHealthReference += amount;
 }
 
 int ABloodInvadersPlayer::GetPlayerHealth()
