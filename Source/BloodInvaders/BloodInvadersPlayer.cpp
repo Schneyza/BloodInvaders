@@ -27,7 +27,7 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	YBoundary = 750.0f;
 
 	// Set Playerhealth to defaultValue
-	PlayerHealth = 3;
+	// PlayerHealth = 3;
 }
 
 void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -157,18 +157,6 @@ void ABloodInvadersPlayer::FireShot()
 	}
 }
 
-void ABloodInvadersPlayer::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
-	{
-		if (OtherActor->Tags.Contains("Enemy"))
-		{
-			//If we have hit an enemy, damage the player
-			DamagePlayer(1);
-		}
-	}
-}
-
 void ABloodInvadersPlayer::EnableFiring() {
 	bFiring = true;
 	//UE_LOG(LogClass, Log, TEXT("Player with ControllerId %i started firing"), ControllerId);
@@ -187,71 +175,6 @@ void ABloodInvadersPlayer::ShotTimerExpired()
 void ABloodInvadersPlayer::SetControllerId(int NewControllerId)
 {
 	ControllerId = NewControllerId;
-}
-
-void ABloodInvadersPlayer::DamagePlayer(int amount)
-{
-	int& HealthReference = PlayerHealth;
-	DamagePlayerWithReference(amount, HealthReference);
-}
-
-void ABloodInvadersPlayer::HealPlayer(int amount)
-{
-	int& HealthReference = PlayerHealth;
-	HealPlayerWithReference(amount, HealthReference);
-}
-
-void ABloodInvadersPlayer::DamagePlayerWithReference(int amount, int& PlayerHealthReference)
-{
-	//if we get more or equal damage to our health, the player dies
-	if (PlayerHealthReference <= amount)
-	{
-		PlayerHealthReference = 0;
-		// block player input
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
-		if (PlayerController)
-		{
-			PlayerController->SetCinematicMode(true, false, false, true, true);
-		}
-		// disable the player character
-		APawn* MyCharacter = UGameplayStatics::GetPlayerPawn(this, ControllerId);
-		if (MyCharacter)
-		{
-			MyCharacter->SetActorHiddenInGame(true);
-			MyCharacter->SetActorEnableCollision(ECollisionEnabled::NoCollision);
-			MyCharacter->SetActorTickEnabled(false);
-		}
-		// notify the GameMode about the player's death
-		UWorld* const World = GetWorld();
-		if (World)
-		{
-			AGameModeBase* GameMode = UGameplayStatics::GetGameMode(World);
-			if (GameMode)
-			{
-				ABloodInvadersGameMode* BIGameMode = Cast<ABloodInvadersGameMode>(GameMode);
-				if (BIGameMode)
-				{
-					BIGameMode->PlayerDeath(ControllerId);
-				}
-			}
-
-		}
-
-	}
-	//otherwise reduce the players health by the specified amount and continue
-	else {
-		PlayerHealthReference -= amount;
-	}
-}
-
-void ABloodInvadersPlayer::HealPlayerWithReference(int amount, int& PlayerHealthReference)
-{
-	PlayerHealthReference += amount;
-}
-
-int ABloodInvadersPlayer::GetPlayerHealth()
-{
-	return PlayerHealth;
 }
 
 void ABloodInvadersPlayer::Ability1() {}

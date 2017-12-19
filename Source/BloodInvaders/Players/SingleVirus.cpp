@@ -56,14 +56,19 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 				if (VirusPlayer)
 				{
 					// Damage the player
-					VirusPlayer->DamagePlayerWithReference(1, VirusPlayer->GetPlayerHealthReference());
+					VirusPlayer->DamagePlayer(1);
 				}
 			}
 
-			// If we collide with a neutrophil, destroy it
+			// Handle Collision with different kinds of enemies
 			if (OtherActor->Tags.Contains("Neutrophil"))
 			{
 				OtherActor->Destroy();
+			}
+			else if (OtherActor->Tags.Contains("Macrophage"))
+			{
+				UE_LOG(LogClass, Error, TEXT("Try to Bounce back Macrophage"));
+				OtherComp->AddForce(NormalImpulse * 20.f);
 			}
 
 			// Destroy the virus (handle other collisions before this!

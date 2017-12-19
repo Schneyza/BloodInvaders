@@ -18,6 +18,10 @@ class BLOODINVADERS_API ABacterium : public ABloodInvadersPlayer
 		UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class USkeletalMeshComponent* PlayerMeshComponent;
 
+	/* The Bacterium's Health*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	int BacteriumHealth;
+
 public:
 	/* Constructor that sets default values*/
 	ABacterium();
@@ -33,8 +37,12 @@ public:
 
 	virtual void Ability1() override;
 
-	virtual void EatBloodCell();
+	/* Function to decrease the player's health */
+	UFUNCTION(BlueprintCallable, Category = Player)
+	void DamagePlayer(int amount);
+
+	void EatBloodCell();
 
 	UFUNCTION()
-		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

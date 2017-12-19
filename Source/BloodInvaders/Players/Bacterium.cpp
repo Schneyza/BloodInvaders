@@ -4,6 +4,9 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/CollisionProfile.h"
+#include "../Enemies/MasterEnemy.h"
+#include "Kismet/GameplayStatics.h"
+#include "BloodInvadersGameMode.h"
 
 ABacterium::ABacterium()
 {
@@ -12,6 +15,8 @@ ABacterium::ABacterium()
 	PlayerMeshComponent->OnComponentHit.AddDynamic(this, &ABacterium::OnHit);		// set up a notification for when this component hits something
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+
+	BacteriumHealth = 100;
 }
 
 void ABacterium::Tick(float DeltaSeconds)
@@ -41,10 +46,70 @@ void ABacterium::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
+		//Handle Collision with Red Blood Cell
 		if (OtherActor->Tags.Contains("RBC"))
 		{
 			OtherActor->Destroy();
 		}
+		//Handle Collision with Enemies
+		AMasterEnemy* Enemy = Cast<AMasterEnemy>(OtherActor);
+		if (Enemy != nullptr)
+		{
+			int DamageToApply = Enemy->GetBacteriumDamage();
+			DamagePlayer(DamageToApply);
+
+			//Handle Collision based on EnemyType
+			if (Enemy->ActorHasTag("Neutrophil"))
+			{
+				Enemy->Destroy();
+			}
+			else if (Enemy->ActorHasTag("Macrophage"))
+			{
+				UE_LOG(LogClass, Error, TEXT("Try to Bounce back Macrophage"));
+				OtherComp->AddForce(NormalImpulse * 20.f);
+			}
+		}
+	}
+}
+
+void ABacterium::DamagePlayer(int amount)
+{
+	//if we get more or equal damage to our health, the player dies
+	if (BacteriumHealth <= amount)
+	{
+		BacteriumHealth = 0;
+		// block player input
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
+		if (PlayerController)
+		{
+			PlayerController->SetCinematicMode(true, false, false, true, true);
+		}
+		// disable the player character
+		APawn* MyCharacter = UGameplayStatics::GetPlayerPawn(this, ControllerId);
+		if (MyCharacter)
+		{
+			MyCharacter->SetActorHiddenInGame(true);
+			MyCharacter->SetActorEnableCollision(ECollisionEnabled::NoCollision);
+			MyCharacter->SetActorTickEnabled(false);
+		}
+		// notify the GameMode about the player's death
+		UWorld* const World = GetWorld();
+		if (World)
+		{
+			AGameModeBase* GameMode = UGameplayStatics::GetGameMode(World);
+			if (GameMode)
+			{
+				ABloodInvadersGameMode* BIGameMode = Cast<ABloodInvadersGameMode>(GameMode);
+				if (BIGameMode)
+				{
+					BIGameMode->PlayerDeath(ControllerId);
+				}
+			}
+		}
+	}
+	//otherwise reduce the players health by the specified amount and continue
+	else {
+		BacteriumHealth -= amount;
 	}
 }
 
@@ -52,6 +117,7 @@ void ABacterium::Ability1()
 {
 
 }
+
 
 void ABacterium::EatBloodCell()
 {

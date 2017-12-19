@@ -24,8 +24,11 @@ class BLOODINVADERS_API AVirus : public ABloodInvadersPlayer
 	bool bInfecting;
 
 	/* The initial number of SingleViruses, also the inital amount of Health for the virus*/
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	int InitialVirusNumber;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	int VirusHealth;
 
 	std::list<AActor*> infectableCells;
 
@@ -55,6 +58,7 @@ public:
 	static const FName InfectBinding;
 	void TryInfect();
 	
-
-	int& GetPlayerHealthReference();
+	/* Function to decrease the player's health */
+	UFUNCTION(BlueprintCallable, Category = Player)
+	void DamagePlayer(int amount);
 };

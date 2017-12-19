@@ -4,6 +4,9 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
+#include "Kismet/GameplayStatics.h"
+#include "BloodInvadersGameMode.h"
+#include "Engine/World.h"
 
 
 const FName AVirus::InfectBinding("Infect");
@@ -17,16 +20,8 @@ AVirus::AVirus()
 	PlayerSphereComponent->SetHiddenInGame(true);
 	PlayerSphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	/*
-	// Create the mesh component
-	PlayerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PlayerMesh"));
-	PlayerMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);		// set up a notification for when this component hits something
-
-	RootComponent = PlayerMeshComponent;
-	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	*/
 	InitialVirusNumber = 5;
-	PlayerHealth = InitialVirusNumber;
+	VirusHealth = InitialVirusNumber;
 }
 
 void AVirus::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -63,7 +58,8 @@ void AVirus::TryInfect() {
 
 	if (infectableCells.size() > 0) {
 		AActor* actor = infectableCells.front();
-		this->AttachRootComponentToActor(actor);
+		//this->AttachRootComponentToActor(actor);
+		this->AttachToActor(actor, FAttachmentTransformRules(EAttachmentRule::KeepWorld, true));
 		this->SetActorRelativeLocation(FVector(0, 0, 0));
 	}
 }
@@ -71,15 +67,6 @@ void AVirus::TryInfect() {
 void AVirus::BeginPlay()
 {
 	Super::BeginPlay();
-	// Enable Generating hit events on collision
-	//PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
-
-	/*
-	PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
-
-	PlayerMeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AVirus::OnOverlapBegin);
-	PlayerMeshComponent->OnComponentEndOverlap.AddDynamic(this, &AVirus::OnOverlapEnd);
-	*/
 }
 
 void AVirus::Tick(float DeltaSeconds)
@@ -100,10 +87,45 @@ void AVirus::Move(float DeltaSeconds)
 	Super::Move(DeltaSeconds);
 }
 
-int& AVirus::GetPlayerHealthReference()
+void AVirus::DamagePlayer(int amount)
 {
-	int& result = PlayerHealth;
-	return result;
+	//if we get more or equal damage to our health, the player dies
+	if (VirusHealth <= amount)
+	{
+		VirusHealth = 0;
+		// block player input
+		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
+		if (PlayerController)
+		{
+			PlayerController->SetCinematicMode(true, false, false, true, true);
+		}
+		// disable the player character
+		APawn* MyCharacter = UGameplayStatics::GetPlayerPawn(this, ControllerId);
+		if (MyCharacter)
+		{
+			MyCharacter->SetActorHiddenInGame(true);
+			MyCharacter->SetActorEnableCollision(ECollisionEnabled::NoCollision);
+			MyCharacter->SetActorTickEnabled(false);
+		}
+		// notify the GameMode about the player's death
+		UWorld* const World = GetWorld();
+		if (World)
+		{
+			AGameModeBase* GameMode = UGameplayStatics::GetGameMode(World);
+			if (GameMode)
+			{
+				ABloodInvadersGameMode* BIGameMode = Cast<ABloodInvadersGameMode>(GameMode);
+				if (BIGameMode)
+				{
+					BIGameMode->PlayerDeath(ControllerId);
+				}
+			}
+		}
+	}
+	//otherwise reduce the players health by the specified amount and continue
+	else {
+		VirusHealth -= amount;
+	}
 }
 
 
