@@ -18,6 +18,8 @@ ASingleVirus::ASingleVirus()
 	VirusMesh->OnComponentHit.AddDynamic(this, &ASingleVirus::OnHit);		// set up a notification for when this component hits something
 	RootComponent = VirusMesh;
 	VirusMesh->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	
+	PushBackStrength = 2000.f;
 }
 
 // Called when the game starts or when spawned
@@ -67,8 +69,7 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 			}
 			else if (OtherActor->Tags.Contains("Macrophage"))
 			{
-				UE_LOG(LogClass, Error, TEXT("Try to Bounce back Macrophage"));
-				OtherComp->AddForce(NormalImpulse * 20.f);
+				OtherComp->AddForce(NormalImpulse * PushBackStrength);
 			}
 
 			// Destroy the virus (handle other collisions before this!

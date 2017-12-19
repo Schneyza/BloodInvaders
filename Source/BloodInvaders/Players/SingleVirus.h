@@ -15,7 +15,8 @@ class BLOODINVADERS_API ASingleVirus : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* VirusMesh;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	float PushBackStrength;
 	
 public:	
 

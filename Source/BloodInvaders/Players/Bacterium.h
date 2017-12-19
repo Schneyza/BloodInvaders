@@ -22,6 +22,9 @@ class BLOODINVADERS_API ABacterium : public ABloodInvadersPlayer
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	int BacteriumHealth;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	float PushBackStrength;
+
 public:
 	/* Constructor that sets default values*/
 	ABacterium();

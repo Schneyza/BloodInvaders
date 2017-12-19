@@ -16,7 +16,10 @@ ABacterium::ABacterium()
 	RootComponent = PlayerMeshComponent;
 	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 
+	GunOffset = FVector(350.f, 0.f, 0.f);
+
 	BacteriumHealth = 100;
+	PushBackStrength = 2000.f;
 }
 
 void ABacterium::Tick(float DeltaSeconds)
@@ -65,8 +68,7 @@ void ABacterium::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 			}
 			else if (Enemy->ActorHasTag("Macrophage"))
 			{
-				UE_LOG(LogClass, Error, TEXT("Try to Bounce back Macrophage"));
-				OtherComp->AddForce(NormalImpulse * 20.f);
+				OtherComp->AddForce(NormalImpulse * PushBackStrength);
 			}
 		}
 	}
