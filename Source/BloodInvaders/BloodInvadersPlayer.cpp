@@ -54,7 +54,7 @@ void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* Play
 	InputComponent->BindAxis(MoveRightBinding);
 	InputComponent->BindAction(FireBinding, IE_Pressed, this, &ABloodInvadersPlayer::EnableFiring);
 	InputComponent->BindAction(FireBinding, IE_Released, this, &ABloodInvadersPlayer::DisableFiring);
-	InputComponent->BindAction(Ability1Binding, IE_Pressed, this, &ABloodInvadersPlayer::Ability1);
+	//InputComponent->BindAction(Ability1Binding, IE_Pressed, this, &ABloodInvadersPlayer::Ability1);
 	InputComponent->BindAction(Ability2Binding, IE_Pressed, this, &ABloodInvadersPlayer::Ability2);
 }
 

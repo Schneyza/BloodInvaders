@@ -130,3 +130,7 @@ void AVirus::DamagePlayer(int amount)
 
 
 
+void AVirus::infect(AActor* cell, UStaticMeshComponent* object)
+{
+
+}

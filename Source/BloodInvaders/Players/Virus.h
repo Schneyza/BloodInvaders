@@ -55,6 +55,9 @@ public:
 
 	virtual void Ability1() override;
 
+	UFUNCTION(BlueprintCallable, Category = Player)
+	void infect(AActor* cell, UStaticMeshComponent* object);
+
 	static const FName InfectBinding;
 	void TryInfect();
 	
