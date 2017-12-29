@@ -123,7 +123,8 @@ void AVirus::FireShot()
 
 
 			nextSingleVirusShotIndex = (nextSingleVirusShotIndex + 1) % virusSwarm.Num();
-			const FVector SpawnLocation = virusSwarm[nextSingleVirusShotIndex]->GetActorLocation() + GunOffset;
+			FVector SpawnLocation = virusSwarm[nextSingleVirusShotIndex]->GetActorLocation() + GunOffset;
+			SpawnLocation = FVector(SpawnLocation.X, SpawnLocation.Y, 0);						// Remove Z Component in order to shot on the game plane
 
 			UWorld* const World = GetWorld();
 			if (World != NULL)

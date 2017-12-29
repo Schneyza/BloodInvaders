@@ -42,7 +42,7 @@ void AMasterEnemy::ApplyDamage(AActor* OtherActor)
 	{
 		int DamageToApply = Projectile->GetDamage();
 
-		Projectile->Destroy();
+		Projectile->HitOther(this);
 
 		if (DamageToApply >= CurrentHealth)
 		{
@@ -54,11 +54,21 @@ void AMasterEnemy::ApplyDamage(AActor* OtherActor)
 			//Reduce Enemy's Health
 			CurrentHealth -= DamageToApply;
 		}
+
 	}
 }
 
 void AMasterEnemy::Die()
 {
+	TArray<AActor*> children;
+	GetAttachedActors(children);
+
+	// auto iterate though all the actors you already have in the TArray
+	for (AActor* child : children)
+	{
+		child->Destroy();
+	}
+
 	Destroy();
 }
 

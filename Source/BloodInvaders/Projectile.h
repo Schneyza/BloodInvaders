@@ -14,26 +14,30 @@ class BLOODINVADERS_API AProjectile : public AActor
 {
 	GENERATED_BODY()
 
+
+
+protected:
+
 	/** Sphere collision component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* ProjectileMesh;
+
+	//Damage variables
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	int Damage;
 
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-protected:
-	//Damage variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
-	int Damage;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+	float timeToLive;
 
 public:
 	// Sets default values for this actor's properties
 	AProjectile();
 
-	/** Function to handle the projectile hitting something */
-	UFUNCTION()
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+	virtual void Tick(float DeltaSeconds) override;
 
 	/** Returns ProjectileMesh subobject **/
 	FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
@@ -44,4 +48,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Projectile)
 	int GetDamage() { return Damage; }
 
+	/** Function to handle the projectile hitting something */
+	virtual void HitOther(AActor* other);
 };
