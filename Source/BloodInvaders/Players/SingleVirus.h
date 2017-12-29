@@ -11,6 +11,8 @@ class BLOODINVADERS_API ASingleVirus : public AActor
 {
 	GENERATED_BODY()
 
+
+
 	/* The mesh for a SingleVirus*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* VirusMesh;
@@ -27,6 +29,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;// Sets default values for this actor's properties
 	
+	// Corresponding Virus Swarm (AVirus)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	AActor* parentVirusSwarm;
 
 	/* Function to handle collision with blocking objects*/
 	UFUNCTION()

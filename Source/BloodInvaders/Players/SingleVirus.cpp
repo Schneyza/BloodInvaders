@@ -49,19 +49,6 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 		// if we collide with an enemy
 		if (OtherActor->Tags.Contains("Enemy"))
 		{
-			// Get a refernce from the SingleVirus to the VirusPlayer
-			FString parentComponentName = GetParentActor()->GetName();
-			AActor* ParentActor = GetParentActor();
-			if (ParentActor)
-			{
-				AVirus* VirusPlayer = Cast<AVirus>(ParentActor);
-				if (VirusPlayer)
-				{
-					// Damage the player
-					VirusPlayer->DamagePlayer(1);
-				}
-			}
-
 			// Handle Collision with different kinds of enemies
 			if (OtherActor->Tags.Contains("Neutrophil"))
 			{
@@ -72,8 +59,15 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 				OtherComp->AddForce(NormalImpulse * PushBackStrength);
 			}
 
-			// Destroy the virus (handle other collisions before this!
-			Destroy();
+			if (parentVirusSwarm)
+			{
+				AVirus* VirusPlayer = Cast<AVirus>(parentVirusSwarm);
+				if (VirusPlayer)
+				{
+					// Damage the player
+					VirusPlayer->SingleVirusGotHit(this);
+				}
+			}
 		}
 	}
 }

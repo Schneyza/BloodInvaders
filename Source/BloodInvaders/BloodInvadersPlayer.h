@@ -45,6 +45,12 @@ public:
 		float YBoundary;
 
 protected:
+	/* Flag to control firing  */
+	uint32 bCanFire : 1;
+
+	/** Handle for efficient management of ShotTimerExpired timer */
+	FTimerHandle TimerHandle_ShotTimerExpired;
+
 	/* The projectile that is spawned when the player shoots*/
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<class AProjectile> Projectile;
@@ -62,11 +68,7 @@ protected:
 	//	int PlayerHealth;
 
 private:
-	/* Flag to control firing  */
-	uint32 bCanFire : 1;
 
-	/** Handle for efficient management of ShotTimerExpired timer */
-	FTimerHandle TimerHandle_ShotTimerExpired;
 
 	// Methods
 public:

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Virus.h"
+#include "Projectile.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/CollisionProfile.h"
@@ -13,6 +14,7 @@ const FName AVirus::InfectBinding("Infect");
 
 AVirus::AVirus()
 {
+
 	// Create the Sphere Component
 	PlayerSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("PlayerSphere"));
 	RootComponent = PlayerSphereComponent;
@@ -20,8 +22,29 @@ AVirus::AVirus()
 	PlayerSphereComponent->SetHiddenInGame(true);
 	PlayerSphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+
 	InitialVirusNumber = 5;
 	VirusHealth = InitialVirusNumber;
+
+	nextSingleVirusShotIndex = 0;
+}
+
+
+void AVirus::OnConstruction(const FTransform & Transform) {
+	if (SingleVirus != NULL) {
+		UWorld* const World = GetWorld();
+
+		if (World != NULL) {
+			for (int i = 0; i < InitialVirusNumber; i++) {
+				ASingleVirus* sVirus = World->SpawnActor<ASingleVirus>(SingleVirus, GetActorLocation(), FRotator(0.0f, 0.0f, .0f));
+				sVirus->parentVirusSwarm = this;
+				virusSwarm.Add(sVirus);
+			}
+		}
+	}
+	else {
+		UE_LOG(LogClass, Error, TEXT("SingleVirus in Virus.cpp is null. Please make sure to assign the SingleVirus in the Virus Blueprint"));
+	}
 }
 
 void AVirus::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -78,7 +101,7 @@ void AVirus::Tick(float DeltaSeconds)
 	MoveViruses();
 
 	/* Try to fire a shot*/
-	Super::FireShot();
+	FireShot();
 }
 
 /* Moves the character. Use this function to specify custom movement behaviour for the virus*/
@@ -87,8 +110,61 @@ void AVirus::Move(float DeltaSeconds)
 	Super::Move(DeltaSeconds);
 }
 
-void AVirus::DamagePlayer(int amount)
+void AVirus::FireShot()
 {
+	
+	// If we it's ok to fire again
+	if (bCanFire == true)
+	{
+		if (bFiring) {
+			// If we are pressing fire stick in a direction
+			const FRotator FireRotation = FRotator(0.0f, 0.0f, .0f);
+			// Spawn projectile at an offset from this pawn
+
+
+			nextSingleVirusShotIndex = (nextSingleVirusShotIndex + 1) % virusSwarm.Num();
+			const FVector SpawnLocation = virusSwarm[nextSingleVirusShotIndex]->GetActorLocation() + GunOffset;
+
+			UWorld* const World = GetWorld();
+			if (World != NULL)
+			{
+				if (Projectile != NULL)
+				{
+					// spawn the projectile
+					World->SpawnActor<AProjectile>(Projectile, SpawnLocation, FireRotation);
+				}
+				else {
+					UE_LOG(LogClass, Error, TEXT("Projectile in BloodInvadersPlayer.cpp is null. Please make sure to assign the Projectile in the Player Blueprint"));
+				}
+			}
+			
+			bCanFire = false;
+			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &ABloodInvadersPlayer::ShotTimerExpired, FireRate);
+
+			// try and play the sound if specified
+			if (FireSound != nullptr)
+			{
+				UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+			}
+			else {
+				UE_LOG(LogClass, Error, TEXT("FireSound in BloodInvadersPlayer.cpp is null. Please make sure to assign the FireSound in the Player Blueprint"));
+			}
+
+			bCanFire = false;
+			
+		}
+
+	}
+	
+}
+
+void AVirus::SingleVirusGotHit(ASingleVirus* singleVirus)
+{
+	int amount = 1;
+
+	virusSwarm.Remove(singleVirus);
+	singleVirus->Destroy();
+
 	//if we get more or equal damage to our health, the player dies
 	if (VirusHealth <= amount)
 	{

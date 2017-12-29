@@ -5,6 +5,7 @@
 #include <list>
 #include "CoreMinimal.h"
 #include "BloodInvadersPlayer.h"
+#include "SingleVirus.h"
 #include "Virus.generated.h"
 
 /**
@@ -30,11 +31,22 @@ class BLOODINVADERS_API AVirus : public ABloodInvadersPlayer
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	int VirusHealth;
 
+	/* The single virus that make up the swarm*/
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class ASingleVirus> SingleVirus;
+
 	std::list<AActor*> infectableCells;
+
+private:
+	int nextSingleVirusShotIndex = 0;
+	TArray < ASingleVirus * > virusSwarm;
 
 public:
 	/* Constructor that sets default values*/
 	AVirus();
+
+	// Creates SingleVirus Swarm
+	virtual void OnConstruction(const FTransform & Transform) override;
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
@@ -49,6 +61,9 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Move(float DeltaSeconds) override;
+
+
+	virtual void FireShot() override;
 	
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 	void MoveViruses();
@@ -61,7 +76,6 @@ public:
 	static const FName InfectBinding;
 	void TryInfect();
 	
-	/* Function to decrease the player's health */
-	UFUNCTION(BlueprintCallable, Category = Player)
-	void DamagePlayer(int amount);
+	/* Called by ASingleVirus when hit */
+	void SingleVirusGotHit(ASingleVirus* singleVirus);
 };
