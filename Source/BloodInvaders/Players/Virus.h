@@ -39,6 +39,11 @@ class BLOODINVADERS_API AVirus : public ABloodInvadersPlayer
 
 private:
 	int nextSingleVirusShotIndex = 0;
+
+	AActor* infectedCell = nullptr;
+	UStaticMeshComponent* infectedCellMesh = nullptr;
+	FTimerHandle TimerHandle_InfectEnd;
+
 	TArray < ASingleVirus * > virusSwarm;
 
 public:
@@ -71,7 +76,8 @@ public:
 	virtual void Ability1() override;
 
 	UFUNCTION(BlueprintCallable, Category = Player)
-	void infect(AActor* cell, UStaticMeshComponent* object);
+	bool infect(AActor* cell, UStaticMeshComponent* object);
+	void endInfectEnd();
 
 	static const FName InfectBinding;
 	void TryInfect();

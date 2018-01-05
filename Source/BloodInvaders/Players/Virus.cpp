@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "BloodInvadersGameMode.h"
 #include "Engine/World.h"
+#include "Runtime/Core/Public/Misc/OutputDeviceDebug.h"
 
 
 const FName AVirus::InfectBinding("Infect");
@@ -107,12 +108,18 @@ void AVirus::Tick(float DeltaSeconds)
 /* Moves the character. Use this function to specify custom movement behaviour for the virus*/
 void AVirus::Move(float DeltaSeconds)
 {
-	Super::Move(DeltaSeconds);
+	if (infectedCell) {
+		SetActorLocation(infectedCellMesh->GetComponentLocation(), false);
+	}
+	else {
+		Super::Move(DeltaSeconds);
+	}
 }
 
 void AVirus::FireShot()
 {
-	
+	if (infectedCell) return;
+
 	// If we it's ok to fire again
 	if (bCanFire == true)
 	{
@@ -207,7 +214,31 @@ void AVirus::SingleVirusGotHit(ASingleVirus* singleVirus)
 
 
 
-void AVirus::infect(AActor* cell, UStaticMeshComponent* object)
+bool AVirus::infect(AActor* cell, UStaticMeshComponent* object)
 {
+	if (infectedCell) {
+		return false;
+	}
+	infectedCell = cell;
+	infectedCellMesh = object;
 
+	UWorld* const World = GetWorld();
+	World->GetTimerManager().SetTimer(TimerHandle_InfectEnd, this, &AVirus::endInfectEnd, 2);
+
+	return true;
+}
+
+
+void AVirus::endInfectEnd()
+{
+	FOutputDeviceDebug debug;
+	infectedCell->CallFunctionByNameWithArguments(TEXT("EndInfect"), debug, this, true);
+	infectedCell = nullptr;
+	infectedCellMesh = nullptr;
+
+	// Create new virus
+	UWorld* const World = GetWorld();
+	ASingleVirus* sVirus = World->SpawnActor<ASingleVirus>(SingleVirus, GetActorLocation(), FRotator(0.0f, 0.0f, .0f));
+	sVirus->parentVirusSwarm = this;
+	virusSwarm.Add(sVirus);
 }
