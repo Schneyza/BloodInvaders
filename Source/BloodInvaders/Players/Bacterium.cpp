@@ -11,10 +11,10 @@
 ABacterium::ABacterium()
 {
 	// Create the mesh component
-	PlayerMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PlayerMesh"));
-	PlayerMeshComponent->OnComponentHit.AddDynamic(this, &ABacterium::OnHit);		// set up a notification for when this component hits something
-	RootComponent = PlayerMeshComponent;
-	PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	//PlayerMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("PlayerMesh"));
+	//PlayerMeshComponent->OnComponentHit.AddDynamic(this, &ABacterium::OnHit);		// set up a notification for when this component hits something
+	//RootComponent = PlayerMeshComponent;
+	//PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 
 	GunOffset = FVector(350.f, 0.f, 0.f);
 
@@ -24,19 +24,15 @@ ABacterium::ABacterium()
 
 void ABacterium::Tick(float DeltaSeconds)
 {
-	/* Move the character*/
-	Move(DeltaSeconds);
-
-	/* Try to fire a shot*/
-	Super::FireShot();
+	ABloodInvadersPlayer::Tick(DeltaSeconds);
 }
 
 void ABacterium::BeginPlay()
 {
 	Super::BeginPlay();
 	// Enable Generating hit events on collision
-	PlayerMeshComponent->BodyInstance.SetInstanceNotifyRBCollision(true);
-	PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
+	//PlayerMeshComponent->BodyInstance.SetInstanceNotifyRBCollision(true);
+	//PlayerMeshComponent->SetNotifyRigidBodyCollision(true);
 }
 
 /* Moves the character. Use this function to specify custom movement behaviour for the virus*/

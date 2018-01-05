@@ -14,9 +14,9 @@ class BLOODINVADERS_API ABacterium : public ABloodInvadersPlayer
 {
 	GENERATED_BODY()
 
-		/* The mesh component */
-		UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		class USkeletalMeshComponent* PlayerMeshComponent;
+	/* The mesh component */
+	//UPROPERTY(Category = Mesh, EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* PlayerMeshComponent;
 
 	/* The Bacterium's Health*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
@@ -30,7 +30,7 @@ public:
 	ABacterium();
 
 	/** Returns PlayerMeshComponent subobject **/
-	FORCEINLINE class USkeletalMeshComponent* GetPlayerMeshComponent() const { return PlayerMeshComponent; }
+	FORCEINLINE class USceneComponent* GetPlayerMeshComponent() const { return RootComponent; }
 
 	virtual void Tick(float DeltaSeconds) override;
 

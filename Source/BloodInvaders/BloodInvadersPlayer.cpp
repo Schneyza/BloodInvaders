@@ -60,6 +60,8 @@ void ABloodInvadersPlayer::SetupPlayerInputComponent(class UInputComponent* Play
 
 void ABloodInvadersPlayer::Tick(float DeltaSeconds)
 {
+	APawn::Tick(DeltaSeconds);
+
 	// Move the character
 	Move(DeltaSeconds);
 
