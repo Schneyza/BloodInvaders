@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Classes/GameFramework/PlayerStart.h"
 #include "Classes/Engine/World.h"
+#include "Runtime/Engine/Public/TimerManager.h"
 #include "BloodInvadersPlayer.h"
 #include "Classes/GameFramework/PlayerController.h"
 #include "Classes/Camera/CameraActor.h"
@@ -21,6 +22,13 @@ void ABloodInvadersGameMode::BeginPlay()
 {
 	SpawnPlayers();
 	//CreateCamera();
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(InfectableSpawnTimer, this, &ABloodInvadersGameMode::SpawnInfectableCell, InfectableSpawnInterval);
+		World->GetTimerManager().SetTimer(BloodCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBloodCell, BloodCellSpawnInterval);
+		World->GetTimerManager().SetTimer(MacrophageSpawnTimer, this, &ABloodInvadersGameMode::ToggleMacrophageSpawn, MacrophageSpawnDelay);
+	}
 }
 
 void ABloodInvadersGameMode::SpawnPlayers()
@@ -147,3 +155,84 @@ void ABloodInvadersGameMode::EndGame()
 		UGameplayStatics::OpenLevel((UObject*)UGameplayStatics::GetGameInstance(World), FName(TEXT("MainMenu")));
 	}
 }
+
+
+/* Methods for Handling Enemy/Immune System Spawning */
+
+void ABloodInvadersGameMode::ToggleMacrophageSpawn()
+{
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(MacrophageSpawnTimer, this, &ABloodInvadersGameMode::SpawnMacrophage, MacrophageSpawnInterval);
+		World->GetTimerManager().SetTimer(NeutrophilMessengerSpawnTimer, this, &ABloodInvadersGameMode::IncreaseNeutrophilMessengerSpawnChance, NeutrophilMessengerSpawnDelay);
+	}
+
+}
+
+void ABloodInvadersGameMode::IncreaseNeutrophilMessengerSpawnChance()
+{
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		if (NeutrophilMessengerSpawnChance < NeutrophilMessengerMaxSpawnChance)
+		{
+			NeutrophilMessengerSpawnChance += 0.1f;
+			UE_LOG(LogClass, Log, TEXT("Neutrophil Messengers now spawning with %f probability"), NeutrophilMessengerSpawnChance * 100.f);
+			World->GetTimerManager().SetTimer(NeutrophilMessengerSpawnTimer, this, &ABloodInvadersGameMode::IncreaseNeutrophilMessengerSpawnChance, NeutrophilMessengerSpawnChanceIncreaseInterval);
+		}
+		else {
+			World->GetTimerManager().ClearTimer(NeutrophilMessengerSpawnTimer);
+		}
+	}
+}
+
+void ABloodInvadersGameMode::SpawnInfectableCell()
+{
+	//Try to spawn
+	UE_LOG(LogClass, Log, TEXT("Trying to spawn Infectable Cell"));
+	if (FMath::RandRange(0.f, 1.f) < InfectableSpawnChance)
+	{
+		UE_LOG(LogClass, Log, TEXT("Successfully spawned Infectable Cell"));
+	}
+	//Reset Timer
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(InfectableSpawnTimer, this, &ABloodInvadersGameMode::SpawnInfectableCell, InfectableSpawnInterval);
+	}
+}
+
+void ABloodInvadersGameMode::SpawnBloodCell()
+{
+	//Try to spawn
+	UE_LOG(LogClass, Log, TEXT("Trying to spawn BloodCell"));
+	if (FMath::RandRange(0.f, 1.f) < InfectableSpawnChance)
+	{
+		UE_LOG(LogClass, Log, TEXT("Successfully spawned BloodCell"));
+	}
+	//Reset Timer
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(BloodCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBloodCell, BloodCellSpawnInterval);
+	}
+}
+
+void ABloodInvadersGameMode::SpawnMacrophage()
+{
+	//Try to spawn
+	UE_LOG(LogClass, Log, TEXT("Trying to spawn Macrophage"));
+	if (FMath::RandRange(0.f, 1.f) < InfectableSpawnChance)
+	{
+		UE_LOG(LogClass, Log, TEXT("Successfully spawned Macrophage"));
+		//Spawn Macrophages and pass parameters for neutrophilmessenger spawning
+	}
+	//Reset Timer
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(MacrophageSpawnTimer, this, &ABloodInvadersGameMode::SpawnMacrophage, MacrophageSpawnInterval);
+	}
+}
+
