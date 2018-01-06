@@ -173,7 +173,7 @@ void ABloodInvadersGameMode::ToggleMacrophageSpawn()
 void ABloodInvadersGameMode::IncreaseNeutrophilMessengerSpawnChance()
 {
 	UWorld* const World = GetWorld();
-	if (World)
+	if (World && NeutrophilMessengerSpawnInterval > 0.f)
 	{
 		if (NeutrophilMessengerSpawnChance < NeutrophilMessengerMaxSpawnChance)
 		{
@@ -187,6 +187,102 @@ void ABloodInvadersGameMode::IncreaseNeutrophilMessengerSpawnChance()
 	}
 }
 
+
+void ABloodInvadersGameMode::IncreaseNeutrophilSpawnChance()
+{
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		if (NeutrophilSpawnChance < NeutrophilMaxSpawnChance)
+		{
+			if (NeutrophilSpawnChance == 0)
+			{
+				World->GetTimerManager().SetTimer(NeutrophilSpawnTimer, this, &ABloodInvadersGameMode::SpawnNeutrophil, NeutrophilSpawnInterval);
+			}
+			NeutrophilSpawnChance += 0.1f;
+			UE_LOG(LogClass, Log, TEXT("Neutrophils now spawning with %f probability"), NeutrophilSpawnChance * 100.f);
+			if (NeutrophilSpawnChance >= NeutrophilMaxSpawnChance)
+			{
+				//Stop Neutrophil Messengers from Spawning
+				NeutrophilMessengerSpawnChance = 0.f;
+				NeutrophilMessengerSpawnInterval = 0.f;
+				if (!DendriticMessengerSpawnStarted)
+				{
+					DendriticMessengerSpawnStarted = true;
+					//Start Spawning Dendritic Messengers or atleast start delay for them to spawn
+					World->GetTimerManager().SetTimer(DendriticMessengerSpawnTimer, this, &ABloodInvadersGameMode::IncreaseDendriticMessengerSpawnChance, DendriticMessengerSpawnDelay);
+				}
+			}
+		}
+	}
+}
+
+void ABloodInvadersGameMode::IncreaseDendriticMessengerSpawnChance()
+{
+	UWorld* const World = GetWorld();
+	if (World && DendriticMessengerSpawnInterval > 0.0f)
+	{
+		if (DendriticMessengerSpawnChance < DendriticMessengerMaxSpawnChance)
+		{
+			DendriticMessengerSpawnChance += 0.1f;
+			UE_LOG(LogClass, Log, TEXT("Dendritic Messengers now spawning with %f probability"), DendriticMessengerSpawnChance * 100.f);
+			World->GetTimerManager().SetTimer(DendriticMessengerSpawnTimer, this, &ABloodInvadersGameMode::IncreaseDendriticMessengerSpawnChance, DendriticMessengerSpawnChanceIncreaseInterval);
+		}
+		else
+		{
+			World->GetTimerManager().ClearTimer(DendriticMessengerSpawnTimer);
+		}
+
+	}
+}
+
+void ABloodInvadersGameMode::IncreaseBCellSpawnChance()
+{
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		if (BCellSpawnChance < BCellMaxSpawnChance)
+		{
+			if (BCellSpawnChance == 0)
+			{
+				World->GetTimerManager().SetTimer(BCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBCell, BCellSpawnIntervall);
+			}
+			BCellSpawnChance += 0.1;
+			UE_LOG(LogClass, Log, TEXT("BCells now spawning with %f probability"), BCellSpawnChance * 100.f);
+		}
+		else
+		{
+			//Stop dendritic messengers from spawning
+			DendriticMessengerSpawnChance = 0.0f;
+			DendriticMessengerSpawnInterval = 0.0f;
+		}
+
+	}
+}
+
+void ABloodInvadersGameMode::IncreaseTHelperSpawnChance()
+{
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		if (THelperSpawnChance < THelperMaxSpawnChance)
+		{
+			if (THelperSpawnChance == 0)
+			{
+				World->GetTimerManager().SetTimer(THelperSpawnTimer, this, &ABloodInvadersGameMode::SpawnTHelper, THelperSpawnInterval);
+			}
+			THelperSpawnChance += 0.1f;
+			UE_LOG(LogClass, Log, TEXT("THelpers now spawning with %f probability"), THelperSpawnChance * 100.f);
+		}
+		else
+		{
+			//Stop dendritic messengers from spawning
+			DendriticMessengerSpawnChance = 0.0f;
+			DendriticMessengerSpawnInterval = 0.0f;
+		}
+	}
+}
+
 void ABloodInvadersGameMode::SpawnInfectableCell()
 {
 	//Try to spawn
@@ -194,6 +290,7 @@ void ABloodInvadersGameMode::SpawnInfectableCell()
 	if (FMath::RandRange(0.f, 1.f) < InfectableSpawnChance)
 	{
 		UE_LOG(LogClass, Log, TEXT("Successfully spawned Infectable Cell"));
+		//SpawnInfectableBP();
 	}
 	//Reset Timer
 	UWorld* const World = GetWorld();
@@ -207,9 +304,10 @@ void ABloodInvadersGameMode::SpawnBloodCell()
 {
 	//Try to spawn
 	UE_LOG(LogClass, Log, TEXT("Trying to spawn BloodCell"));
-	if (FMath::RandRange(0.f, 1.f) < InfectableSpawnChance)
+	if (FMath::RandRange(0.f, 1.f) < BloodCellSpawnChance)
 	{
 		UE_LOG(LogClass, Log, TEXT("Successfully spawned BloodCell"));
+		//SpawnBloodCellBP();
 	}
 	//Reset Timer
 	UWorld* const World = GetWorld();
@@ -223,16 +321,66 @@ void ABloodInvadersGameMode::SpawnMacrophage()
 {
 	//Try to spawn
 	UE_LOG(LogClass, Log, TEXT("Trying to spawn Macrophage"));
-	if (FMath::RandRange(0.f, 1.f) < InfectableSpawnChance)
+	if (FMath::RandRange(0.f, 1.f) < MacrophageSpawnChance)
 	{
 		UE_LOG(LogClass, Log, TEXT("Successfully spawned Macrophage"));
 		//Spawn Macrophages and pass parameters for neutrophilmessenger spawning
+		SpawnMacrophageBP();
 	}
 	//Reset Timer
 	UWorld* const World = GetWorld();
 	if (World)
 	{
 		World->GetTimerManager().SetTimer(MacrophageSpawnTimer, this, &ABloodInvadersGameMode::SpawnMacrophage, MacrophageSpawnInterval);
+	}
+}
+
+void ABloodInvadersGameMode::SpawnNeutrophil()
+{
+	//Try to spawn
+	UE_LOG(LogClass, Log, TEXT("Trying to spawn Neutrophil"));
+	if (FMath::RandRange(0.f, 1.f) < NeutrophilSpawnChance)
+	{
+		UE_LOG(LogClass, Log, TEXT("Successfully spawned Neutrophil"));
+		//SpawnNeutrophilBP();
+	}
+	//ResetTimer
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(NeutrophilSpawnTimer, this, &ABloodInvadersGameMode::SpawnNeutrophil, NeutrophilSpawnInterval);
+	}
+}
+
+void ABloodInvadersGameMode::SpawnBCell()
+{
+	UE_LOG(LogClass, Log, TEXT("Trying to spawn BCell"));
+	if (FMath::RandRange(0.f, 1.f) < BCellSpawnChance)
+	{
+		UE_LOG(LogClass, Log, TEXT("Successfully spawned BCell"));
+		SpawnBCellBP();
+	}
+	//Reset Timer
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(BCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBCell, BCellSpawnIntervall);
+	}
+}
+
+void ABloodInvadersGameMode::SpawnTHelper()
+{
+	UE_LOG(LogClass, Log, TEXT("Trying to spawn THelper"));
+	if (FMath::RandRange(0.f, 1.f) < THelperSpawnChance)
+	{
+		UE_LOG(LogClass, Log, TEXT("Successfully spawned THelper"));
+		SpawnTHelperBP();
+	}
+	//Reset Timer
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(THelperSpawnTimer, this, &ABloodInvadersGameMode::SpawnTHelper, THelperSpawnInterval);
 	}
 }
 

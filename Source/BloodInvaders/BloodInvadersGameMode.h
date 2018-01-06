@@ -57,28 +57,38 @@ public:
 		float NeutrophilMessengerSpawnChanceIncreaseInterval = 5.f;
 	FTimerHandle NeutrophilMessengerSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float NeutrophilSpawnInterval = 0;
+		float NeutrophilSpawnInterval = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
 		float NeutrophilSpawnChance = 0;
-	FTimerHandle NeutriphilSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float DendriticMessengerSpawnDelay = 0;
+		float NeutrophilMaxSpawnChance = 0.8;
+	FTimerHandle NeutrophilSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float DendriticMessengerSpawnInterval = 0;
+		float DendriticMessengerSpawnDelay = 15;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
+		float DendriticMessengerSpawnInterval = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
 		float DendriticMessengerSpawnChance = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float MessengerDelay = 0;
+		float DendriticMessengerMaxSpawnChance = 0.8;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
+		float DendriticMessengerSpawnChanceIncreaseInterval = 5;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Immune System")
+	bool DendriticMessengerSpawnStarted = false;
 	FTimerHandle DendriticMessengerSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float BCellSpawnIntervall = 0;
+		float BCellSpawnIntervall = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
 		float BCellSpawnChance = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
+		float BCellMaxSpawnChance = 0.8;
 	FTimerHandle BCellSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float THelperSpawnInterval = 0;
+		float THelperSpawnInterval = 3;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
 		float THelperSpawnChance = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
+		float THelperMaxSpawnChance = 0.8;
 	FTimerHandle THelperSpawnTimer;
 	
 
@@ -106,9 +116,25 @@ public:
 
 	/* Determines what happens when both players are dead*/
 	void EndGame();
-
+	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
+		void SpawnInfectableBP();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
+		void SpawnBloodCellBP();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
 		void SpawnMacrophageBP();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
+		void SpawnNeutrophilBP();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
+		void SpawnBCellBP();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
+		void SpawnTHelperBP();
+
+	UFUNCTION(BlueprintCallable, Category = "Immune System")
+		void IncreaseNeutrophilSpawnChance();
+	UFUNCTION(BlueprintCallable, Category = "Immune System")
+		void IncreaseBCellSpawnChance();
+	UFUNCTION(BlueprintCallable, Category = "Immune System")
+		void IncreaseTHelperSpawnChance();
 
 protected:
 
@@ -122,10 +148,14 @@ private:
 	void ToggleMacrophageSpawn();
 
 	void IncreaseNeutrophilMessengerSpawnChance();
+	void IncreaseDendriticMessengerSpawnChance();
 
 	void SpawnInfectableCell();
 	void SpawnBloodCell();
 	void SpawnMacrophage();
+	void SpawnNeutrophil();
+	void SpawnBCell();
+	void SpawnTHelper();
 	
 };
 
