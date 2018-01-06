@@ -16,6 +16,20 @@ AMasterEnemy::AMasterEnemy()
 	BacteriumDamage = 20;
 }
 
+void AMasterEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)  {
+
+	TArray<AActor*> children;
+	GetAttachedActors(children);
+
+	// auto iterate though all the actors you already have in the TArray
+	for (AActor* child : children)
+	{
+		child->Destroy();
+	}
+
+	AActor::EndPlay(EndPlayReason);
+}
+
 // Called when the game starts or when spawned
 void AMasterEnemy::BeginPlay()
 {
@@ -60,15 +74,6 @@ void AMasterEnemy::ApplyDamage(AActor* OtherActor)
 
 void AMasterEnemy::Die()
 {
-	TArray<AActor*> children;
-	GetAttachedActors(children);
-
-	// auto iterate though all the actors you already have in the TArray
-	for (AActor* child : children)
-	{
-		child->Destroy();
-	}
-
 	Destroy();
 }
 

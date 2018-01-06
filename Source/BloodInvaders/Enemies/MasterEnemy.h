@@ -33,6 +33,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Called when Actor is marked for destruction
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
 	/** Handle Collision with other objects */
 	UFUNCTION(BlueprintCallable, Category = Enemy)
 	virtual void HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
@@ -44,6 +47,7 @@ public:
 	/** What to do when the enemy dies*/
 	UFUNCTION(BlueprintCallable, Category = Enemy)
 	virtual void Die();
+
 
 	UFUNCTION(BlueprintPure, Category = Enemy)
 	int GetBacteriumDamage() { return BacteriumDamage; }
