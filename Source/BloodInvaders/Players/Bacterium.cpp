@@ -66,6 +66,10 @@ void ABacterium::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 			{
 				OtherComp->AddForce(NormalImpulse * PushBackStrength);
 			}
+			else if (Enemy->ActorHasTag("Protein"))
+			{
+				Enemy->Destroy();
+			}
 		}
 	}
 }
