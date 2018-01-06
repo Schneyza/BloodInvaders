@@ -241,4 +241,9 @@ void AVirus::endInfectEnd()
 	ASingleVirus* sVirus = World->SpawnActor<ASingleVirus>(SingleVirus, GetActorLocation(), FRotator(0.0f, 0.0f, .0f));
 	sVirus->parentVirusSwarm = this;
 	virusSwarm.Add(sVirus);
+
+	// Set Z to 0
+	FVector loc = GetActorLocation();
+	loc.Z = 0;
+	SetActorLocation(loc);
 }
