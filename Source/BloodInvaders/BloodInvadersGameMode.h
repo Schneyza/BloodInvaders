@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "BloodInvadersPlayer.h"
+#include "SpawnVolume.h"
 #include "BloodInvadersGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -24,6 +25,9 @@ public:
 	/* Rotation which the camera spawns with*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	FVector CameraRotation;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
+		ASpawnVolume* SpawnVolume;
 
 	//Immune/Enemy System Variables
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")

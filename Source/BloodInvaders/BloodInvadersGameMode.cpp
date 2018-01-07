@@ -28,7 +28,21 @@ void ABloodInvadersGameMode::BeginPlay()
 		World->GetTimerManager().SetTimer(InfectableSpawnTimer, this, &ABloodInvadersGameMode::SpawnInfectableCell, InfectableSpawnInterval);
 		World->GetTimerManager().SetTimer(BloodCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBloodCell, BloodCellSpawnInterval);
 		World->GetTimerManager().SetTimer(MacrophageSpawnTimer, this, &ABloodInvadersGameMode::ToggleMacrophageSpawn, MacrophageSpawnDelay);
+	
+		TArray<AActor*> SpawnVolumes;
+
+		//Get Spawn Volume
+		UGameplayStatics::GetAllActorsWithTag(World, "SpawnVolume", SpawnVolumes);
+		if (SpawnVolumes.Num() > 0)
+		{
+			SpawnVolume = Cast<ASpawnVolume>(SpawnVolumes[0]);
+		}
+		else
+		{
+			SpawnVolume = nullptr;
+		}
 	}
+
 }
 
 void ABloodInvadersGameMode::SpawnPlayers()
@@ -178,7 +192,7 @@ void ABloodInvadersGameMode::IncreaseNeutrophilMessengerSpawnChance()
 		if (NeutrophilMessengerSpawnChance < NeutrophilMessengerMaxSpawnChance)
 		{
 			NeutrophilMessengerSpawnChance += 0.1f;
-			UE_LOG(LogClass, Log, TEXT("Neutrophil Messengers now spawning with %f probability"), NeutrophilMessengerSpawnChance * 100.f);
+			//UE_LOG(LogClass, Log, TEXT("Neutrophil Messengers now spawning with %f probability"), NeutrophilMessengerSpawnChance * 100.f);
 			World->GetTimerManager().SetTimer(NeutrophilMessengerSpawnTimer, this, &ABloodInvadersGameMode::IncreaseNeutrophilMessengerSpawnChance, NeutrophilMessengerSpawnChanceIncreaseInterval);
 		}
 		else {
@@ -200,7 +214,7 @@ void ABloodInvadersGameMode::IncreaseNeutrophilSpawnChance()
 				World->GetTimerManager().SetTimer(NeutrophilSpawnTimer, this, &ABloodInvadersGameMode::SpawnNeutrophil, NeutrophilSpawnInterval);
 			}
 			NeutrophilSpawnChance += 0.1f;
-			UE_LOG(LogClass, Log, TEXT("Neutrophils now spawning with %f probability"), NeutrophilSpawnChance * 100.f);
+			//UE_LOG(LogClass, Log, TEXT("Neutrophils now spawning with %f probability"), NeutrophilSpawnChance * 100.f);
 			if (NeutrophilSpawnChance >= NeutrophilMaxSpawnChance)
 			{
 				//Stop Neutrophil Messengers from Spawning
@@ -225,7 +239,7 @@ void ABloodInvadersGameMode::IncreaseDendriticMessengerSpawnChance()
 		if (DendriticMessengerSpawnChance < DendriticMessengerMaxSpawnChance)
 		{
 			DendriticMessengerSpawnChance += 0.1f;
-			UE_LOG(LogClass, Log, TEXT("Dendritic Messengers now spawning with %f probability"), DendriticMessengerSpawnChance * 100.f);
+			//UE_LOG(LogClass, Log, TEXT("Dendritic Messengers now spawning with %f probability"), DendriticMessengerSpawnChance * 100.f);
 			World->GetTimerManager().SetTimer(DendriticMessengerSpawnTimer, this, &ABloodInvadersGameMode::IncreaseDendriticMessengerSpawnChance, DendriticMessengerSpawnChanceIncreaseInterval);
 		}
 		else
@@ -248,7 +262,7 @@ void ABloodInvadersGameMode::IncreaseBCellSpawnChance()
 				World->GetTimerManager().SetTimer(BCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBCell, BCellSpawnIntervall);
 			}
 			BCellSpawnChance += 0.1;
-			UE_LOG(LogClass, Log, TEXT("BCells now spawning with %f probability"), BCellSpawnChance * 100.f);
+			//UE_LOG(LogClass, Log, TEXT("BCells now spawning with %f probability"), BCellSpawnChance * 100.f);
 		}
 		else
 		{
@@ -272,7 +286,7 @@ void ABloodInvadersGameMode::IncreaseTHelperSpawnChance()
 				World->GetTimerManager().SetTimer(THelperSpawnTimer, this, &ABloodInvadersGameMode::SpawnTHelper, THelperSpawnInterval);
 			}
 			THelperSpawnChance += 0.1f;
-			UE_LOG(LogClass, Log, TEXT("THelpers now spawning with %f probability"), THelperSpawnChance * 100.f);
+			//UE_LOG(LogClass, Log, TEXT("THelpers now spawning with %f probability"), THelperSpawnChance * 100.f);
 		}
 		else
 		{
@@ -286,11 +300,11 @@ void ABloodInvadersGameMode::IncreaseTHelperSpawnChance()
 void ABloodInvadersGameMode::SpawnInfectableCell()
 {
 	//Try to spawn
-	UE_LOG(LogClass, Log, TEXT("Trying to spawn Infectable Cell"));
+	//UE_LOG(LogClass, Log, TEXT("Trying to spawn Infectable Cell"));
 	if (FMath::RandRange(0.f, 1.f) < InfectableSpawnChance)
 	{
-		UE_LOG(LogClass, Log, TEXT("Successfully spawned Infectable Cell"));
-		//SpawnInfectableBP();
+		//UE_LOG(LogClass, Log, TEXT("Successfully spawned Infectable Cell"));
+		SpawnInfectableBP();
 	}
 	//Reset Timer
 	UWorld* const World = GetWorld();
@@ -303,11 +317,11 @@ void ABloodInvadersGameMode::SpawnInfectableCell()
 void ABloodInvadersGameMode::SpawnBloodCell()
 {
 	//Try to spawn
-	UE_LOG(LogClass, Log, TEXT("Trying to spawn BloodCell"));
+	//UE_LOG(LogClass, Log, TEXT("Trying to spawn BloodCell"));
 	if (FMath::RandRange(0.f, 1.f) < BloodCellSpawnChance)
 	{
-		UE_LOG(LogClass, Log, TEXT("Successfully spawned BloodCell"));
-		//SpawnBloodCellBP();
+		//UE_LOG(LogClass, Log, TEXT("Successfully spawned BloodCell"));
+		SpawnBloodCellBP();
 	}
 	//Reset Timer
 	UWorld* const World = GetWorld();
@@ -320,10 +334,10 @@ void ABloodInvadersGameMode::SpawnBloodCell()
 void ABloodInvadersGameMode::SpawnMacrophage()
 {
 	//Try to spawn
-	UE_LOG(LogClass, Log, TEXT("Trying to spawn Macrophage"));
+	//UE_LOG(LogClass, Log, TEXT("Trying to spawn Macrophage"));
 	if (FMath::RandRange(0.f, 1.f) < MacrophageSpawnChance)
 	{
-		UE_LOG(LogClass, Log, TEXT("Successfully spawned Macrophage"));
+		//UE_LOG(LogClass, Log, TEXT("Successfully spawned Macrophage"));
 		//Spawn Macrophages and pass parameters for neutrophilmessenger spawning
 		SpawnMacrophageBP();
 	}
@@ -338,11 +352,11 @@ void ABloodInvadersGameMode::SpawnMacrophage()
 void ABloodInvadersGameMode::SpawnNeutrophil()
 {
 	//Try to spawn
-	UE_LOG(LogClass, Log, TEXT("Trying to spawn Neutrophil"));
+	//UE_LOG(LogClass, Log, TEXT("Trying to spawn Neutrophil"));
 	if (FMath::RandRange(0.f, 1.f) < NeutrophilSpawnChance)
 	{
-		UE_LOG(LogClass, Log, TEXT("Successfully spawned Neutrophil"));
-		//SpawnNeutrophilBP();
+		//UE_LOG(LogClass, Log, TEXT("Successfully spawned Neutrophil"));
+		SpawnNeutrophilBP();
 	}
 	//ResetTimer
 	UWorld* const World = GetWorld();
@@ -354,10 +368,10 @@ void ABloodInvadersGameMode::SpawnNeutrophil()
 
 void ABloodInvadersGameMode::SpawnBCell()
 {
-	UE_LOG(LogClass, Log, TEXT("Trying to spawn BCell"));
+	//UE_LOG(LogClass, Log, TEXT("Trying to spawn BCell"));
 	if (FMath::RandRange(0.f, 1.f) < BCellSpawnChance)
 	{
-		UE_LOG(LogClass, Log, TEXT("Successfully spawned BCell"));
+		//UE_LOG(LogClass, Log, TEXT("Successfully spawned BCell"));
 		SpawnBCellBP();
 	}
 	//Reset Timer
@@ -370,10 +384,10 @@ void ABloodInvadersGameMode::SpawnBCell()
 
 void ABloodInvadersGameMode::SpawnTHelper()
 {
-	UE_LOG(LogClass, Log, TEXT("Trying to spawn THelper"));
+	//UE_LOG(LogClass, Log, TEXT("Trying to spawn THelper"));
 	if (FMath::RandRange(0.f, 1.f) < THelperSpawnChance)
 	{
-		UE_LOG(LogClass, Log, TEXT("Successfully spawned THelper"));
+		//UE_LOG(LogClass, Log, TEXT("Successfully spawned THelper"));
 		SpawnTHelperBP();
 	}
 	//Reset Timer
