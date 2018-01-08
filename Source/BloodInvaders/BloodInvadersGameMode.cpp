@@ -28,7 +28,7 @@ void ABloodInvadersGameMode::BeginPlay()
 		World->GetTimerManager().SetTimer(InfectableSpawnTimer, this, &ABloodInvadersGameMode::SpawnInfectableCell, InfectableSpawnInterval);
 		World->GetTimerManager().SetTimer(BloodCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBloodCell, BloodCellSpawnInterval);
 		World->GetTimerManager().SetTimer(MacrophageSpawnTimer, this, &ABloodInvadersGameMode::ToggleMacrophageSpawn, MacrophageSpawnDelay);
-	
+
 		TArray<AActor*> SpawnVolumes;
 
 		//Get Spawn Volume
@@ -262,15 +262,28 @@ void ABloodInvadersGameMode::IncreaseBCellSpawnChance()
 				World->GetTimerManager().SetTimer(BCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBCell, BCellSpawnIntervall);
 			}
 			BCellSpawnChance += 0.1;
-			//UE_LOG(LogClass, Log, TEXT("BCells now spawning with %f probability"), BCellSpawnChance * 100.f);
+			UE_LOG(LogClass, Log, TEXT("BCells now spawning with %f probability"), BCellSpawnChance * 100.f);
+			if (BCellSpawnChance > BCellMaxSpawnChance)
+			{
+				//Stop dendritic messengers from spawning
+				DendriticMessengerSpawnChance = 0.0f;
+				DendriticMessengerSpawnInterval = 0.0f;
+
+				//Start EndGameTimer
+				World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::StopSpawning, EndGameDuration);
+				UE_LOG(LogClass, Log, TEXT("Started EndGame Timer"));
+			}
 		}
-		else
+		else 
 		{
 			//Stop dendritic messengers from spawning
 			DendriticMessengerSpawnChance = 0.0f;
 			DendriticMessengerSpawnInterval = 0.0f;
-		}
 
+			//Start EndGameTimer
+			World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::StopSpawning, EndGameDuration);
+			UE_LOG(LogClass, Log, TEXT("Started EndGame Timer"));
+		}
 	}
 }
 
@@ -395,6 +408,28 @@ void ABloodInvadersGameMode::SpawnTHelper()
 	if (World)
 	{
 		World->GetTimerManager().SetTimer(THelperSpawnTimer, this, &ABloodInvadersGameMode::SpawnTHelper, THelperSpawnInterval);
+	}
+
+}
+
+void ABloodInvadersGameMode::StopSpawning()
+{
+	//Set all spawn chances to 0
+	MacrophageSpawnChance = 0;
+	InfectableSpawnChance = 0;
+	BloodCellSpawnChance = 0;
+	NeutrophilMessengerMaxSpawnChance = 0;
+	NeutrophilSpawnChance = 0;
+	DendriticMessengerSpawnChance = 0;
+	BCellSpawnChance = 0;
+	THelperSpawnChance = 0;
+
+	//Start Postgame Timer to return to the main menu
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::EndGame, PostGameDuration);
+		UE_LOG(LogClass, Log, TEXT("Started PostGame Timer"));
 	}
 }
 

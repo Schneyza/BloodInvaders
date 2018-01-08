@@ -94,6 +94,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
 		float THelperMaxSpawnChance = 0.8;
 	FTimerHandle THelperSpawnTimer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
+		float EndGameDuration = 120;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
+		float PostGameDuration = 20;
+	FTimerHandle EndGameTimer;
 	
 
 	
@@ -161,6 +166,7 @@ private:
 	void SpawnBCell();
 	void SpawnTHelper();
 	
+	void StopSpawning();
 };
 
 
