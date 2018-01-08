@@ -4,6 +4,7 @@
 #include "Engine/CollisionProfile.h"
 #include "Virus.h"
 #include "Classes/Components/StaticMeshComponent.h"
+#include "../Projectile.h"
 
 
 // Sets default values
@@ -66,6 +67,23 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 				{
 					// Damage the player
 					VirusPlayer->SingleVirusGotHit(this);
+				}
+			}
+		}
+
+		//Handle collision with projectiles
+		AProjectile* Projectile = Cast<AProjectile>(OtherActor);
+		if (Projectile != nullptr)
+		{
+			//If the projectile was shot by an enemy, destroy the single virus
+			if (Projectile->IsEnemyProjectile())
+			{
+				AVirus* VirusPlayer = Cast<AVirus>(parentVirusSwarm);
+				if (VirusPlayer)
+				{
+					// Damage the player
+					VirusPlayer->SingleVirusGotHit(this);
+					OtherActor->Destroy();
 				}
 			}
 		}

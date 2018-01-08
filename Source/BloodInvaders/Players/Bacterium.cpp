@@ -7,6 +7,7 @@
 #include "../Enemies/MasterEnemy.h"
 #include "Kismet/GameplayStatics.h"
 #include "BloodInvadersGameMode.h"
+#include "../Projectile.h"
 
 ABacterium::ABacterium()
 {
@@ -69,6 +70,20 @@ void ABacterium::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 			else if (Enemy->ActorHasTag("Protein"))
 			{
 				Enemy->Destroy();
+			}
+		}
+
+		//Handle Collision with projectiles
+		{
+			AProjectile* Projectile = Cast<AProjectile>(OtherActor);
+			if (Projectile != nullptr)
+			{
+				// if the projectile is shot by an enemy, damage the player
+				if (Projectile->IsEnemyProjectile())
+				{
+					DamagePlayer(Projectile->GetDamage());
+					OtherActor->Destroy();
+				}
 			}
 		}
 	}

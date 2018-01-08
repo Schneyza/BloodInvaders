@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
 	int Damage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Projectile, meta = (AllowPrivateAccess = "true"))
+		bool bEnemyProjectile;
+
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
@@ -38,6 +41,8 @@ public:
 	AProjectile();
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	bool IsEnemyProjectile() { return bEnemyProjectile; }
 
 	/** Returns ProjectileMesh subobject **/
 	FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }

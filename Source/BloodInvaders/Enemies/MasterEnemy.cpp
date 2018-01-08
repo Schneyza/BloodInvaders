@@ -54,19 +54,27 @@ void AMasterEnemy::ApplyDamage(AActor* OtherActor)
 	AProjectile* Projectile = Cast<AProjectile>(OtherActor);
 	if (Projectile != nullptr)
 	{
-		int DamageToApply = Projectile->GetDamage();
-
-		Projectile->HitOther(this);
-
-		if (DamageToApply >= CurrentHealth)
+		//If the projectile was shot by an enemy, destroy it
+		if (Projectile->IsEnemyProjectile())
 		{
-			//Enemy dies
-			Die();
+			OtherActor->Destroy();
 		}
-		else
+		else //if it was shot by a player apply damage
 		{
-			//Reduce Enemy's Health
-			CurrentHealth -= DamageToApply;
+			int DamageToApply = Projectile->GetDamage();
+
+			Projectile->HitOther(this);
+
+			if (DamageToApply >= CurrentHealth)
+			{
+				//Enemy dies
+				Die();
+			}
+			else
+			{
+				//Reduce Enemy's Health
+				CurrentHealth -= DamageToApply;
+			}
 		}
 
 	}
