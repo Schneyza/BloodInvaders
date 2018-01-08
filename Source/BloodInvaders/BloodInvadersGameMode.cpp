@@ -262,7 +262,7 @@ void ABloodInvadersGameMode::IncreaseBCellSpawnChance()
 				World->GetTimerManager().SetTimer(BCellSpawnTimer, this, &ABloodInvadersGameMode::SpawnBCell, BCellSpawnIntervall);
 			}
 			BCellSpawnChance += 0.1;
-			UE_LOG(LogClass, Log, TEXT("BCells now spawning with %f probability"), BCellSpawnChance * 100.f);
+			//UE_LOG(LogClass, Log, TEXT("BCells now spawning with %f probability"), BCellSpawnChance * 100.f);
 			if (BCellSpawnChance > BCellMaxSpawnChance)
 			{
 				//Stop dendritic messengers from spawning
@@ -271,7 +271,7 @@ void ABloodInvadersGameMode::IncreaseBCellSpawnChance()
 
 				//Start EndGameTimer
 				World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::StopSpawning, EndGameDuration);
-				UE_LOG(LogClass, Log, TEXT("Started EndGame Timer"));
+				//UE_LOG(LogClass, Log, TEXT("Started EndGame Timer"));
 			}
 		}
 		else 
@@ -282,7 +282,7 @@ void ABloodInvadersGameMode::IncreaseBCellSpawnChance()
 
 			//Start EndGameTimer
 			World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::StopSpawning, EndGameDuration);
-			UE_LOG(LogClass, Log, TEXT("Started EndGame Timer"));
+			//UE_LOG(LogClass, Log, TEXT("Started EndGame Timer"));
 		}
 	}
 }
@@ -429,7 +429,7 @@ void ABloodInvadersGameMode::StopSpawning()
 	if (World)
 	{
 		World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::EndGame, PostGameDuration);
-		UE_LOG(LogClass, Log, TEXT("Started PostGame Timer"));
+		//UE_LOG(LogClass, Log, TEXT("Started PostGame Timer"));
 	}
 }
 
