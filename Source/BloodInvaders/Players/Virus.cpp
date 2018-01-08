@@ -177,6 +177,7 @@ void AVirus::SingleVirusGotHit(ASingleVirus* singleVirus)
 	if (VirusHealth <= amount)
 	{
 		VirusHealth = 0;
+		bAlive = false;
 		// block player input
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
 		if (PlayerController)

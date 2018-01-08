@@ -95,6 +95,7 @@ void ABacterium::DamagePlayer(int amount)
 	if (BacteriumHealth <= amount)
 	{
 		BacteriumHealth = 0;
+		bAlive = false;
 		// block player input
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, ControllerId);
 		if (PlayerController)

@@ -26,6 +26,8 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	XBoundary = 2750.0f;
 	YBoundary = 750.0f;
 
+	bAlive = true;
+
 	// Set Playerhealth to defaultValue
 	// PlayerHealth = 3;
 }

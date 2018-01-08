@@ -63,6 +63,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Controller, meta = (AllowPrivateAccess = "true"))
 		int ControllerId;
 
+	/* The player's controller id*/
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Controller, meta = (AllowPrivateAccess = "true"))
+		bool bAlive;
+
 	///* The player's Health*/
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	//	int PlayerHealth;
@@ -97,6 +101,9 @@ public:
 	//Accessor functions for the player's controller id
 	void SetControllerId(int NewControllerId);
 	FORCEINLINE int GetControllerId() const { return ControllerId; }
+
+	UFUNCTION(BlueprintCallable, Category = Player)
+	bool IsAlive() { return bAlive; }
 
 protected:
 
