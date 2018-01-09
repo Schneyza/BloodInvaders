@@ -18,13 +18,13 @@ ABloodInvadersPlayer::ABloodInvadersPlayer()
 	MoveSpeed = 1000.0f;
 	// Weapon
 	GunOffset = FVector(65.f, 0.f, 0.f);
-	FireRate = 0.1f;
+	FireRate = 0.167f;
 	bCanFire = true;
 	bFiring = false;
 
 	//Map Boundaries
 	XBoundary = 2750.0f;
-	YBoundary = 750.0f;
+	YBoundary = 850.0f;
 
 	bAlive = true;
 

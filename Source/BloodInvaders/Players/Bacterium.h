@@ -48,4 +48,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Player)
 	void HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Player)
+		void ChangeColor();
 };

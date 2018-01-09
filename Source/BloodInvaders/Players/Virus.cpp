@@ -243,6 +243,9 @@ void AVirus::endInfectEnd()
 	sVirus->parentVirusSwarm = this;
 	virusSwarm.Add(sVirus);
 
+	//Increase Virus Health
+	VirusHealth += 1;
+
 	// Set Z to 0
 	FVector loc = GetActorLocation();
 	loc.Z = 0;

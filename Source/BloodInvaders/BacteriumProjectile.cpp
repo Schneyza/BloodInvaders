@@ -10,4 +10,5 @@
 ABacteriumProjectile::ABacteriumProjectile() : AProjectile()
 {
 	//ProjectileMesh->SetWorldRotation(FRotator(FMath::FRandRange(-180.f, 180.f), FMath::FRandRange(-180.f, 180.f), FMath::FRandRange(-180.f, 180.f)));
+	Damage = 60.f;
 }

@@ -17,7 +17,8 @@ ABacterium::ABacterium()
 	//RootComponent = PlayerMeshComponent;
 	//PlayerMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 
-	GunOffset = FVector(350.f, 0.f, 0.f);
+	GunOffset = FVector(450.f, 0.f, 0.f);
+	FireRate = 0.5f;
 
 	BacteriumHealth = 100;
 	PushBackStrength = 2000.f;
@@ -129,6 +130,7 @@ void ABacterium::DamagePlayer(int amount)
 	//otherwise reduce the players health by the specified amount and continue
 	else {
 		BacteriumHealth -= amount;
+		ChangeColor();
 	}
 }
 
