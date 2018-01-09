@@ -46,8 +46,6 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
-		FString MyName = OtherActor->GetName();
-		UE_LOG(LogClass, Log, TEXT("Bacterium collided with %s"), *MyName);
 		//Handle Collision with Red Blood Cell
 		if (OtherActor->Tags.Contains("RBC"))
 		{
@@ -70,9 +68,9 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 			{
 				OtherComp->AddForce(NormalImpulse * PushBackStrength);
 			}
-			else if (Enemy->ActorHasTag("Protein"))
+			else if (Enemy->ActorHasTag("Eatable"))
 			{
-				Enemy->Destroy();
+				Enemy->Die();
 			}
 		}
 

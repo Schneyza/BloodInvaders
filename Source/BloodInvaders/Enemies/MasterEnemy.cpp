@@ -84,6 +84,7 @@ void AMasterEnemy::ApplyDamage(AActor* OtherActor)
 
 void AMasterEnemy::Die()
 {
+	OnDeath();
 	Destroy();
 }
 

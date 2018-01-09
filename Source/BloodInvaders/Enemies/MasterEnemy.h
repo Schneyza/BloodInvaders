@@ -50,6 +50,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Enemy)
 	virtual void Die();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = Enemy)
+		void OnDeath();
+
 	UFUNCTION(BlueprintPure, Category = Enemy)
 	int GetBacteriumDamage() { return BacteriumDamage; }
 
