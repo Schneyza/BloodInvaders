@@ -43,9 +43,9 @@ public:
 		float BloodCellSpawnChance = 0.5f;
 	FTimerHandle BloodCellSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float MacrophageSpawnDelay = 15;
+		float MacrophageSpawnDelay = 10;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float MacrophageSpawnInterval = 3;
+		float MacrophageSpawnInterval = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
 		float MacrophageSpawnChance = 0.5f;
 	FTimerHandle MacrophageSpawnTimer;
@@ -61,7 +61,7 @@ public:
 		float NeutrophilMessengerSpawnChanceIncreaseInterval = 5.f;
 	FTimerHandle NeutrophilMessengerSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float NeutrophilSpawnInterval = 3;
+		float NeutrophilSpawnInterval = .5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
 		float NeutrophilSpawnChance = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")

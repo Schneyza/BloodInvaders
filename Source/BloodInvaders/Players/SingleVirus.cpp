@@ -19,7 +19,7 @@ ASingleVirus::ASingleVirus()
 	VirusMesh->OnComponentHit.AddDynamic(this, &ASingleVirus::OnHit);		// set up a notification for when this component hits something
 	RootComponent = VirusMesh;
 	VirusMesh->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	
+
 	PushBackStrength = 2000.f;
 }
 
@@ -83,9 +83,9 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 				{
 					// Damage the player
 					VirusPlayer->SingleVirusGotHit(this);
-					OtherActor->Destroy();
 				}
 			}
+			OtherActor->Destroy();
 		}
 	}
 }

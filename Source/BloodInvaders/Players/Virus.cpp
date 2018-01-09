@@ -23,6 +23,7 @@ AVirus::AVirus()
 	PlayerSphereComponent->SetHiddenInGame(true);
 	PlayerSphereComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
+	FireRate = 0.1f;
 
 	InitialVirusNumber = 5;
 	VirusHealth = InitialVirusNumber;

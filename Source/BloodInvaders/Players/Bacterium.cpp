@@ -21,7 +21,7 @@ ABacterium::ABacterium()
 	FireRate = 0.5f;
 
 	BacteriumHealth = 100;
-	PushBackStrength = 2000.f;
+	PushBackStrength = 200.f;
 }
 
 void ABacterium::Tick(float DeltaSeconds)
@@ -56,7 +56,7 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 		AMasterEnemy* Enemy = Cast<AMasterEnemy>(OtherActor);
 		if (Enemy != nullptr)
 		{
-			
+
 			int DamageToApply = Enemy->GetBacteriumDamage();
 			DamagePlayer(DamageToApply);
 
@@ -84,8 +84,8 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 				if (Projectile->IsEnemyProjectile())
 				{
 					DamagePlayer(Projectile->GetDamage());
-					OtherActor->Destroy();
 				}
+				OtherActor->Destroy();
 			}
 		}
 	}
