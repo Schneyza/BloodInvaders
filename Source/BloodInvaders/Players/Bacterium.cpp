@@ -42,10 +42,12 @@ void ABacterium::Move(float DeltaSeconds)
 	Super::Move(DeltaSeconds);
 }
 
-void ABacterium::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
+		FString MyName = OtherActor->GetName();
+		UE_LOG(LogClass, Log, TEXT("Bacterium collided with %s"), *MyName);
 		//Handle Collision with Red Blood Cell
 		if (OtherActor->Tags.Contains("RBC"))
 		{
@@ -55,6 +57,7 @@ void ABacterium::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimit
 		AMasterEnemy* Enemy = Cast<AMasterEnemy>(OtherActor);
 		if (Enemy != nullptr)
 		{
+			
 			int DamageToApply = Enemy->GetBacteriumDamage();
 			DamagePlayer(DamageToApply);
 

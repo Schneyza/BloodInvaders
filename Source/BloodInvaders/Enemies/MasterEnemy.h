@@ -29,6 +29,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	int BacteriumDamage;
 
+	//can the enemy be powered up?
+	bool bCanPowerUp;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -48,8 +50,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Enemy)
 	virtual void Die();
 
-
 	UFUNCTION(BlueprintPure, Category = Enemy)
 	int GetBacteriumDamage() { return BacteriumDamage; }
+
+	UFUNCTION(BlueprintCallable, Category = Enemy)
+		void PowerUp();
+	UFUNCTION(BlueprintImplementableEvent, Category = Enemy)
+		void PowerUpEvent();
 	
 };

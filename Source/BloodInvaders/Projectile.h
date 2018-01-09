@@ -55,4 +55,6 @@ public:
 
 	/** Function to handle the projectile hitting something */
 	virtual void HitOther(AActor* other);
+
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };

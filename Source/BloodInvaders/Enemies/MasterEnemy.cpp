@@ -14,6 +14,8 @@ AMasterEnemy::AMasterEnemy()
 	CurrentHealth = MaxHealth;
 
 	BacteriumDamage = 20;
+
+	bCanPowerUp = true;
 }
 
 void AMasterEnemy::EndPlay(const EEndPlayReason::Type EndPlayReason)  {
@@ -83,5 +85,15 @@ void AMasterEnemy::ApplyDamage(AActor* OtherActor)
 void AMasterEnemy::Die()
 {
 	Destroy();
+}
+
+void AMasterEnemy::PowerUp()
+{
+	if (bCanPowerUp)
+	{
+		bCanPowerUp = false;
+		UE_LOG(LogClass, Log, TEXT("Called PowerUp Method"));
+		PowerUpEvent();
+	}
 }
 
