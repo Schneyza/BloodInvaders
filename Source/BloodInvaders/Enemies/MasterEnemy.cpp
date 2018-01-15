@@ -93,7 +93,6 @@ void AMasterEnemy::PowerUp()
 	if (bCanPowerUp)
 	{
 		bCanPowerUp = false;
-		UE_LOG(LogClass, Log, TEXT("Called PowerUp Method"));
 		PowerUpEvent();
 	}
 }
