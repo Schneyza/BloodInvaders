@@ -98,7 +98,7 @@ public:
 		static void ApplyFluidTorque(UPrimitiveComponent* target, bool simulate3D);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
-		static void ApplyFluidForceToAllBodiesBelow(USkeletalMeshComponent* target);
+		static FVector GetFluidForceToAllBodiesBelow(USkeletalMeshComponent* target);
 
 	UFUNCTION(BlueprintCallable, Category = "FluidDynamics")
 		static void ApplyFluid(UPrimitiveComponent* target);

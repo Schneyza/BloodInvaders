@@ -203,7 +203,7 @@ void UFluidDynamics::ApplyFluidForce(UPrimitiveComponent* target)
 	}
 }
 
-void UFluidDynamics::ApplyFluidForceToAllBodiesBelow(USkeletalMeshComponent* target)
+FVector UFluidDynamics::GetFluidForceToAllBodiesBelow(USkeletalMeshComponent* target)
 {
 	FVector location = target->GetComponentLocation();
 	FVector objectV = target->GetPhysicsLinearVelocity();
@@ -213,17 +213,17 @@ void UFluidDynamics::ApplyFluidForceToAllBodiesBelow(USkeletalMeshComponent* tar
 		FVector fluidV = getFluidVelocity2D(location);
 		FVector dV = fluidV - objectV;
 		FVector force = dV * flowRegimeFactor(dV) * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
-		target->AddForceToAllBodiesBelow(force);
+		return force;
 	}
 	else {
 		FVector direction = pointTowardsDomain(location);
 		direction.Normalize();
 		if (FVector::DotProduct(direction, objectV) < 0 && hardWall) {
-			target->SetPhysicsLinearVelocity(direction * 100);
+			return direction * 100;
 		}
 		else {
 			FVector v = direction * globalTurbulenceAmplitude;
-			target->AddForceToAllBodiesBelow(v * flowRegimeFactor(v) * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f));
+			return v * flowRegimeFactor(v) * fluidInteractionStrength * FGenericPlatformMath::Pow(mass, 0.66667f);
 		}
 	}
 }
