@@ -65,8 +65,11 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 				AVirus* VirusPlayer = Cast<AVirus>(parentVirusSwarm);
 				if (VirusPlayer)
 				{
-					// Damage the player
-					VirusPlayer->SingleVirusGotHit(this);
+					if (!VirusPlayer->IsInvincible())
+					{
+						// Damage the player
+						VirusPlayer->SingleVirusGotHit(this);
+					}
 				}
 			}
 		}
@@ -81,8 +84,11 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 				AVirus* VirusPlayer = Cast<AVirus>(parentVirusSwarm);
 				if (VirusPlayer)
 				{
-					// Damage the player
-					VirusPlayer->SingleVirusGotHit(this);
+					if (!VirusPlayer->IsInvincible())
+					{
+						// Damage the player
+						VirusPlayer->SingleVirusGotHit(this);
+					}
 				}
 			}
 			OtherActor->Destroy();

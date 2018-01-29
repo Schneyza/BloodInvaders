@@ -46,6 +46,11 @@ private:
 
 	TArray < ASingleVirus * > virusSwarm;
 
+	/*Is the virus currently invincible*/
+	bool bInvincible;
+
+	void TurnOffInvincibility();
+
 public:
 	/* Constructor that sets default values*/
 	AVirus();
@@ -84,4 +89,6 @@ public:
 	
 	/* Called by ASingleVirus when hit */
 	void SingleVirusGotHit(ASingleVirus* singleVirus);
+
+	bool IsInvincible();
 };

@@ -29,6 +29,7 @@ AVirus::AVirus()
 	VirusHealth = InitialVirusNumber;
 
 	nextSingleVirusShotIndex = 0;
+	bInvincible = false;
 }
 
 
@@ -227,6 +228,8 @@ bool AVirus::infect(AActor* cell, UStaticMeshComponent* object)
 	UWorld* const World = GetWorld();
 	World->GetTimerManager().SetTimer(TimerHandle_InfectEnd, this, &AVirus::endInfectEnd, 2);
 
+	bInvincible = true;
+
 	return true;
 }
 
@@ -251,4 +254,17 @@ void AVirus::endInfectEnd()
 	FVector loc = GetActorLocation();
 	loc.Z = 0;
 	SetActorLocation(loc);
+
+	//Turn invincibility off after 0.5 seconds
+	World->GetTimerManager().SetTimer(TimerHandle_InfectEnd, this, &AVirus::TurnOffInvincibility, 0.5f);
+}
+
+bool AVirus::IsInvincible()
+{
+	return bInvincible;
+}
+
+void AVirus::TurnOffInvincibility()
+{
+	bInvincible = false;
 }
