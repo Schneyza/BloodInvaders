@@ -212,6 +212,7 @@ void AVirus::SingleVirusGotHit(ASingleVirus* singleVirus)
 	//otherwise reduce the players health by the specified amount and continue
 	else {
 		VirusHealth -= amount;
+		GotHitEvent();
 	}
 }
 
@@ -267,4 +268,14 @@ bool AVirus::IsInvincible()
 void AVirus::TurnOffInvincibility()
 {
 	bInvincible = false;
+}
+
+void AVirus::SetInvincible(bool invincible)
+{
+	bInvincible = invincible;
+}
+
+TArray<ASingleVirus*> AVirus::GetSingleViruses()
+{
+	return virusSwarm;
 }

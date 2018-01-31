@@ -90,5 +90,16 @@ public:
 	/* Called by ASingleVirus when hit */
 	void SingleVirusGotHit(ASingleVirus* singleVirus);
 
+	UFUNCTION(BlueprintPure, Category = Virus)
 	bool IsInvincible();
+	UFUNCTION(BlueprintCallable, Category = Virus)
+	void SetInvincible(bool invincible);
+
+	UFUNCTION(BlueprintIMplementableEvent, Category = Virus)
+		void GotHitEvent();
+
+	UFUNCTION(BlueprintCallable, Category = Virus)
+		TArray<ASingleVirus*> GetSingleViruses();
 };
+
+

@@ -25,6 +25,9 @@ class BLOODINVADERS_API ABacterium : public ABloodInvadersPlayer
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay, meta = (AllowPrivateAccess = "true"))
 	float PushBackStrength;
 
+private:
+	bool bInvincible;
+
 public:
 	/* Constructor that sets default values*/
 	ABacterium();
@@ -51,4 +54,9 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Player)
 		void ChangeColor();
+
+	UFUNCTION(BlueprintImplementableEvent, Category = Bacterium)
+		void GotHitEvent();
+	UFUNCTION(BlueprintCallable, Category = Bacterium)
+		void SetInvincible(bool invincible);
 };

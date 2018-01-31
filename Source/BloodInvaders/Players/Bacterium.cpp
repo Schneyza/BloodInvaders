@@ -22,6 +22,8 @@ ABacterium::ABacterium()
 
 	BacteriumHealth = 100;
 	PushBackStrength = 200.f;
+
+	bInvincible = false;
 }
 
 void ABacterium::Tick(float DeltaSeconds)
@@ -58,7 +60,10 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 		{
 
 			int DamageToApply = Enemy->GetBacteriumDamage();
-			DamagePlayer(DamageToApply);
+			if (!bInvincible)
+			{
+				DamagePlayer(DamageToApply);
+			}
 
 			//Handle Collision based on EnemyType
 			if (Enemy->ActorHasTag("Neutrophil"))
@@ -83,7 +88,10 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 				// if the projectile is shot by an enemy, damage the player
 				if (Projectile->IsEnemyProjectile())
 				{
-					DamagePlayer(Projectile->GetDamage());
+					if (!bInvincible)
+					{
+						DamagePlayer(Projectile->GetDamage());
+					}
 				}
 				OtherActor->Destroy();
 			}
@@ -131,6 +139,10 @@ void ABacterium::DamagePlayer(int amount)
 	else {
 		BacteriumHealth -= amount;
 		ChangeColor();
+		if (amount > 0)
+		{
+			GotHitEvent();
+		}
 	}
 }
 
@@ -143,6 +155,11 @@ void ABacterium::Ability1()
 void ABacterium::EatBloodCell()
 {
 
+}
+
+void ABacterium::SetInvincible(bool invincible)
+{
+	bInvincible = invincible;
 }
 
 
