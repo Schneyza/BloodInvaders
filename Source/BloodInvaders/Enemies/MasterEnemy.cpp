@@ -76,6 +76,8 @@ void AMasterEnemy::ApplyDamage(AActor* OtherActor)
 			{
 				//Reduce Enemy's Health
 				CurrentHealth -= DamageToApply;
+				//Trigger Flash Event
+				Flash();
 			}
 		}
 

@@ -60,5 +60,7 @@ public:
 		void PowerUp();
 	UFUNCTION(BlueprintImplementableEvent, Category = Enemy)
 		void PowerUpEvent();
+	UFUNCTION(BlueprintImplementableEvent, Category = Enemy)
+		void Flash();
 	
 };
