@@ -100,6 +100,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = Virus)
 		TArray<ASingleVirus*> GetSingleViruses();
+	UFUNCTION(BlueprintImplementableEvent, Category = Virus)
+		void HealEffect();
 };
 
 

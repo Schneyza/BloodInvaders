@@ -77,6 +77,7 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 			else if (Enemy->ActorHasTag("Eatable"))
 			{
 				Enemy->Die();
+				HealEffect();
 			}
 		}
 

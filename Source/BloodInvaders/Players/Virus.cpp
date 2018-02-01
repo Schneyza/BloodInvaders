@@ -256,6 +256,8 @@ void AVirus::endInfectEnd()
 	loc.Z = 0;
 	SetActorLocation(loc);
 
+	HealEffect();
+
 	//Turn invincibility off after 0.5 seconds
 	World->GetTimerManager().SetTimer(TimerHandle_InfectEnd, this, &AVirus::TurnOffInvincibility, 0.5f);
 }

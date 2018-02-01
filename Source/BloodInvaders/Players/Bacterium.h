@@ -59,4 +59,6 @@ public:
 		void GotHitEvent();
 	UFUNCTION(BlueprintCallable, Category = Bacterium)
 		void SetInvincible(bool invincible);
+	UFUNCTION(BlueprintImplementableEvent, Category = Bacterium)
+		void HealEffect();
 };
