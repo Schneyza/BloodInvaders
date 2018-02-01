@@ -72,7 +72,10 @@ void ABacterium::HandleCollision(UPrimitiveComponent* HitComp, AActor* OtherActo
 			}
 			else if (Enemy->ActorHasTag("Macrophage"))
 			{
-				OtherComp->AddForce(NormalImpulse * PushBackStrength);
+				if (!OtherComp->ComponentHasTag("Tentacle"))
+				{
+					OtherComp->AddForce(NormalImpulse * PushBackStrength);
+				}
 			}
 			else if (Enemy->ActorHasTag("Eatable"))
 			{

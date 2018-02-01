@@ -57,7 +57,10 @@ void ASingleVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrim
 			}
 			else if (OtherActor->Tags.Contains("Macrophage"))
 			{
-				OtherComp->AddForce(NormalImpulse * PushBackStrength);
+				if (!OtherComp->ComponentHasTag("Tentacle"))
+				{
+					OtherComp->AddForce(NormalImpulse * PushBackStrength);
+				}
 			}
 
 			if (parentVirusSwarm)
