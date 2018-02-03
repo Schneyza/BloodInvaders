@@ -156,17 +156,24 @@ void ABloodInvadersGameMode::PlayerDeath(int ControllerId)
 	//If both players the game is over
 	if (!PlayersAlive[0] && !PlayersAlive[1])
 	{
-		EndGame();
+		LoseGame();
 	}
 }
 
-void ABloodInvadersGameMode::EndGame()
+void ABloodInvadersGameMode::LoseGame()
 {
 	UWorld* const World = GetWorld();
 	if (World)
 	{
-		// Load the MainMenu level
-		UGameplayStatics::OpenLevel((UObject*)UGameplayStatics::GetGameInstance(World), FName(TEXT("MainMenu")));
+		ToggleLoseScreen();
+	}
+}
+void ABloodInvadersGameMode::WinGame()
+{
+	UWorld* const World = GetWorld();
+	if (World)
+	{
+		ToggleWinScreen();
 	}
 }
 
@@ -428,7 +435,7 @@ void ABloodInvadersGameMode::StopSpawning()
 	UWorld* const World = GetWorld();
 	if (World)
 	{
-		World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::EndGame, PostGameDuration);
+		World->GetTimerManager().SetTimer(EndGameTimer, this, &ABloodInvadersGameMode::WinGame, PostGameDuration);
 		//UE_LOG(LogClass, Log, TEXT("Started PostGame Timer"));
 	}
 }

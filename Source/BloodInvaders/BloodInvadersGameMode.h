@@ -95,9 +95,9 @@ public:
 		float THelperMaxSpawnChance = 0.8;
 	FTimerHandle THelperSpawnTimer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float EndGameDuration = 120;
+		float EndGameDuration = 90;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Immune System")
-		float PostGameDuration = 20;
+		float PostGameDuration = 10;
 	FTimerHandle EndGameTimer;
 	
 
@@ -124,7 +124,8 @@ public:
 	void PlayerDeath(int ControllerId);
 
 	/* Determines what happens when both players are dead*/
-	void EndGame();
+	void LoseGame();
+	void WinGame();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
 		void SpawnInfectableBP();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Spawning")
@@ -144,6 +145,10 @@ public:
 		void IncreaseBCellSpawnChance();
 	UFUNCTION(BlueprintCallable, Category = "Immune System")
 		void IncreaseTHelperSpawnChance();
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
+		void ToggleWinScreen();
+	UFUNCTION(BlueprintImplementableEvent, Category = "UI")
+		void ToggleLoseScreen();
 
 protected:
 
