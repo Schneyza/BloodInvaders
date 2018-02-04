@@ -29,6 +29,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	int BacteriumDamage;
 
+	// Score Entry Name Variable
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score", meta = (AllowPrivateAccess = "true"))
+	FString EntryName;
+
 	//can the enemy be powered up?
 	bool bCanPowerUp;
 public:	
@@ -51,7 +55,7 @@ public:
 	virtual void Die();
 
 	UFUNCTION(BlueprintImplementableEvent, Category = Enemy)
-		void OnDeath();
+	void OnDeath();
 
 	UFUNCTION(BlueprintPure, Category = Enemy)
 	int GetBacteriumDamage() { return BacteriumDamage; }
