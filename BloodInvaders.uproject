@@ -21,6 +21,13 @@
 		{
 			"Name": "ApexDestruction",
 			"Enabled": true
+		},
+		{
+			"Name": "OculusVR",
+			"Enabled": false
 		}
+	],
+	"TargetPlatforms": [
+		"WindowsNoEditor"
 	]
 }
